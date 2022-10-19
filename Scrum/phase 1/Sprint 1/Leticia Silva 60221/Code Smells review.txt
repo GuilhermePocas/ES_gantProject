@@ -1,1 +1,1 @@
-1º The identified pattern is correct - Guilherme Poças
+1º The identified smell and it's solution are correct - Guilherme Poças
