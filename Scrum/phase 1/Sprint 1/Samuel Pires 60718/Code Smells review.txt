@@ -1,1 +1,2 @@
-1º Code Smell, Dead Code, is correct and the solution is the more apropriated. -Leticia Silva 60221
+1º Code Smell, Dead Code, is correct and the solution is apropriated. -Leticia Silva 60221
+2º The smell is adequately identified and justified - Guilherme Poças
