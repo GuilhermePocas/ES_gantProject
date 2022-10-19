@@ -1,0 +1,1 @@
+1º Smell solution doesn't make much sense because they're both constructors
