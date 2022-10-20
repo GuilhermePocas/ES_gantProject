@@ -1,2 +1,3 @@
 1º Pattern well identified and explained - Samuel Pires 60718
 2º Pattern well identified, but could specify which object is the invoker. -Leticia Silva 60221
+3º The pattern is well identified, but the template for the other action classes is the GPAction class itself, not the getIconFilePrefix method - Guilherme Poças 60236
