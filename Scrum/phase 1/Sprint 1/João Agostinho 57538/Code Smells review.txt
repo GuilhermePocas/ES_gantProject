@@ -1,3 +1,0 @@
-1º Code Smell well spotted code with good explanation and solution - Samuel Pires 60718
-2º Code Smell is well identified, and the solution seems correct. -Leticia Silva 60221
-3º Code smell is well identified and the solution is also correct. - Joana Tomás 60152

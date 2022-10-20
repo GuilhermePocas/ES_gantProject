@@ -1,2 +1,0 @@
-1º Pattern well identified and explained - Samuel Pires 60718
-2º Pattern well identified, but could specify which object is the invoker. -Leticia Silva 60221
