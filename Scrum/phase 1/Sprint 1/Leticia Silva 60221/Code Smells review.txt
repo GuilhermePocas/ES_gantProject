@@ -1,2 +1,3 @@
 1º The identified smell and it's solution are correct - Guilherme Poças
 2º Well identified code smell with satisfactory explanation and solution - Samuel Pires 60718
+3º Code smell, and solution are correct - Joana Tomás 60152
