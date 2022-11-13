@@ -32,10 +32,7 @@ import net.sourceforge.ganttproject.action.GPAction;
 import net.sourceforge.ganttproject.gui.UIUtil.DateValidator;
 import net.sourceforge.ganttproject.gui.options.OptionsPageBuilder;
 import net.sourceforge.ganttproject.gui.options.SpringUtilities;
-import net.sourceforge.ganttproject.gui.taskproperties.CustomColumnsPanel;
-import net.sourceforge.ganttproject.gui.taskproperties.TaskAllocationsPanel;
-import net.sourceforge.ganttproject.gui.taskproperties.TaskDependenciesPanel;
-import net.sourceforge.ganttproject.gui.taskproperties.TaskScheduleDatesPanel;
+import net.sourceforge.ganttproject.gui.taskproperties.*;
 import net.sourceforge.ganttproject.language.GanttLanguage;
 import net.sourceforge.ganttproject.resource.HumanResourceManager;
 import net.sourceforge.ganttproject.roles.RoleManager;
@@ -82,6 +79,8 @@ public class GanttTaskPropertiesBean extends JPanel {
   private JPanel generalPanel;
 
   private JComponent predecessorsPanel;
+
+  private JPanel objectivesPanel;
 
   private JPanel resourcesPanel;
 
@@ -143,6 +142,8 @@ public class GanttTaskPropertiesBean extends JPanel {
   private TaskDependenciesPanel myDependenciesPanel;
 
   private TaskAllocationsPanel myAllocationsPanel;
+
+  private ObjectivesPanel myObjectivesPanel;
 
   private final HumanResourceManager myHumanResourceManager;
 
@@ -317,6 +318,11 @@ public class GanttTaskPropertiesBean extends JPanel {
     resourcesPanel = myAllocationsPanel.getComponent();
   }
 
+  private void constructObjectivesPanel() {
+    myObjectivesPanel = new ObjectivesPanel(selectedTasks[0]);
+    objectivesPanel = myObjectivesPanel.getComponent();
+  }
+
   /** Construct the notes panel */
   private void constructNotesPanel() {
     secondRowPanelNotes = new JPanel(new BorderLayout());
@@ -352,7 +358,6 @@ public class GanttTaskPropertiesBean extends JPanel {
         predecessorsPanel);
 
     constructResourcesPanel();
-
     tabbedPane.addTab(language.getCorrectedLabel("human"), new ImageIcon(getClass().getResource("/icons/res_16.gif")),
         resourcesPanel);
 
@@ -363,6 +368,11 @@ public class GanttTaskPropertiesBean extends JPanel {
     constructCustomColumnPanel();
     tabbedPane.addTab(language.getText("customColumns"), new ImageIcon(getClass().getResource("/icons/custom.gif")),
         myCustomColumnPanel.getComponent());
+
+    constructObjectivesPanel();
+    tabbedPane.addTab("Objectives", new ImageIcon(getClass().getResource("/icons/res_16.gif")),
+            objectivesPanel);
+
     tabbedPane.addFocusListener(new FocusAdapter() {
       private boolean isFirstFocusGain = true;
 

@@ -34,6 +34,7 @@ import net.sourceforge.ganttproject.GPLogger;
 import net.sourceforge.ganttproject.chart.MilestoneTaskFakeActivity;
 import net.sourceforge.ganttproject.document.AbstractURLDocument;
 import net.sourceforge.ganttproject.document.Document;
+import net.sourceforge.ganttproject.gui.taskproperties.ObjectivesTableModel;
 import net.sourceforge.ganttproject.task.algorithm.AlgorithmCollection;
 import net.sourceforge.ganttproject.task.algorithm.AlgorithmException;
 import net.sourceforge.ganttproject.task.algorithm.CostAlgorithmImpl;
@@ -47,6 +48,7 @@ import net.sourceforge.ganttproject.task.hierarchy.TaskHierarchyItem;
 import net.sourceforge.ganttproject.util.collect.Pair;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import net.sourceforge.ganttproject.gui.taskproperties.ObjectivesTableModel.*;
 
 import java.awt.*;
 import java.io.File;
@@ -104,6 +106,8 @@ public class TaskImpl implements Task {
   // TaskDependencyCollectionImpl();
   private final ResourceAssignmentCollectionImpl myAssignments;
 
+  private final List<Objective> myObjectives;
+
   private final TaskDependencySlice myDependencySlice;
 
   private final TaskDependencySlice myDependencySliceAsDependant;
@@ -144,6 +148,7 @@ public class TaskImpl implements Task {
     myManager = taskManager;
     myID = taskID;
 
+    myObjectives = new ArrayList<Objective>();
     myAssignments = new ResourceAssignmentCollectionImpl(this, myManager.getConfig().getResourceManager());
     myDependencySlice = new TaskDependencySliceImpl(this, myManager.getDependencyCollection(), TaskDependencySlice.COMPLETE_SLICE_FXN);
     myDependencySliceAsDependant = new TaskDependencySliceAsDependant(this, myManager.getDependencyCollection());
@@ -170,6 +175,7 @@ public class TaskImpl implements Task {
     }
     myAssignments = new ResourceAssignmentCollectionImpl(this, myManager.getConfig().getResourceManager());
     myAssignments.importData(copy.getAssignmentCollection());
+    myObjectives = copy.myObjectives;
     myName = copy.myName;
     myWebLink = copy.myWebLink;
     isMilestone = copy.isMilestone;
@@ -475,6 +481,10 @@ public class TaskImpl implements Task {
   @Override
   public ResourceAssignmentCollection getAssignmentCollection() {
     return myAssignments;
+  }
+
+  public List<ObjectivesTableModel.Objective> getObjectivesCollection() {
+    return myObjectives;
   }
 
   @Override

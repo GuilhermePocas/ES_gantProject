@@ -81,7 +81,7 @@ public abstract class ChartComponentBase extends JPanel implements TimelineChart
     CURSOR_DRAG = drag;
     DEFAULT_CURSOR = hand;
   }
-  private final IGanttProject myProject;
+  private final net.sourceforge.ganttproject.IGanttProject myProject;
 
   private final ZoomManager myZoomManager;
 

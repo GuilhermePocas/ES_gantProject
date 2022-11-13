@@ -22,6 +22,7 @@ import biz.ganttproject.core.chart.render.ShapePaint;
 import biz.ganttproject.core.time.GanttCalendar;
 import biz.ganttproject.core.time.TimeDuration;
 import net.sourceforge.ganttproject.document.Document;
+import net.sourceforge.ganttproject.gui.taskproperties.ObjectivesTableModel;
 import net.sourceforge.ganttproject.task.dependency.TaskDependencySlice;
 
 import java.awt.*;
@@ -143,6 +144,8 @@ public interface Task extends MutableTask {
 
   // HumanResource[] getAssignedHumanResources();
   ResourceAssignment[] getAssignments();
+
+  List<ObjectivesTableModel.Objective> getObjectivesCollection();
 
   TaskDependencySlice getDependencies();
 
