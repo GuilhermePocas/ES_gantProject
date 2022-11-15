@@ -106,7 +106,7 @@ public class TaskImpl implements Task {
   // TaskDependencyCollectionImpl();
   private final ResourceAssignmentCollectionImpl myAssignments;
 
-  private final List<Objective> myObjectives;
+  private final TaskObjectiveCollection myObjectives;
 
   private final TaskDependencySlice myDependencySlice;
 
@@ -148,7 +148,7 @@ public class TaskImpl implements Task {
     myManager = taskManager;
     myID = taskID;
 
-    myObjectives = new ArrayList<Objective>();
+    myObjectives = new TaskObjectiveCollectionImpl(this);
     myAssignments = new ResourceAssignmentCollectionImpl(this, myManager.getConfig().getResourceManager());
     myDependencySlice = new TaskDependencySliceImpl(this, myManager.getDependencyCollection(), TaskDependencySlice.COMPLETE_SLICE_FXN);
     myDependencySliceAsDependant = new TaskDependencySliceAsDependant(this, myManager.getDependencyCollection());
@@ -483,7 +483,7 @@ public class TaskImpl implements Task {
     return myAssignments;
   }
 
-  public List<ObjectivesTableModel.Objective> getObjectivesCollection() {
+  public TaskObjectiveCollection getObjectivesCollection() {
     return myObjectives;
   }
 

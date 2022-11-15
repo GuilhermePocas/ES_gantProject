@@ -145,7 +145,7 @@ public interface Task extends MutableTask {
   // HumanResource[] getAssignedHumanResources();
   ResourceAssignment[] getAssignments();
 
-  List<ObjectivesTableModel.Objective> getObjectivesCollection();
+  TaskObjectiveCollection getObjectivesCollection();
 
   TaskDependencySlice getDependencies();
 

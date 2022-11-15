@@ -5,10 +5,7 @@ import net.sourceforge.ganttproject.GPLogger;
 import net.sourceforge.ganttproject.language.GanttLanguage;
 import net.sourceforge.ganttproject.resource.HumanResource;
 import net.sourceforge.ganttproject.roles.Role;
-import net.sourceforge.ganttproject.task.ResourceAssignment;
-import net.sourceforge.ganttproject.task.ResourceAssignmentCollection;
-import net.sourceforge.ganttproject.task.ResourceAssignmentMutator;
-import net.sourceforge.ganttproject.task.Task;
+import net.sourceforge.ganttproject.task.*;
 import net.sourceforge.ganttproject.task.dependency.TaskDependency;
 import net.sourceforge.ganttproject.task.dependency.TaskDependencyCollectionMutator;
 import net.sourceforge.ganttproject.task.dependency.TaskDependencyConstraint;
@@ -26,47 +23,6 @@ import java.util.List;
 
 public class ObjectivesTableModel extends AbstractTableModel {
 
-    public class Objective {
-        private int id;
-        private String name;
-        private int percentage;
-        private boolean checked;
-
-        public Objective(int id, String name, int percentage) {
-            this.id = id;
-            this.name = name;
-            this.percentage = percentage;
-            this.checked = false;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public int getPercentage() {
-            return percentage;
-        }
-
-        public boolean isChecked() {
-            return checked;
-        }
-
-        public void check(boolean value) {
-            checked =  value;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setPercentage(int percentage) {
-            this.percentage = percentage;
-        }
-    }
 
     static enum Column {
         ID("id", String.class), NAME("objectivename", String.class),
@@ -89,14 +45,17 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    private final List<Objective> myObjectives;
+    private final TaskObjectiveCollection myObjectives;
+
+    private final Task myTask;
 
     //private final ResourceAssignmentMutator myMutator;
 
     private boolean isChanged = false;
 
-    public ObjectivesTableModel(List<Objective> myObjectives) {
-        this.myObjectives = myObjectives;
+    public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
+        this.myObjectives = myObjectivesCol;
+        myTask = myObjectivesCol.getTask();
         //myMutator = assignmentCollection.createMutator();
     }
 
@@ -125,7 +84,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         Object result;
         if (row >= 0) {
             if (row < myObjectives.size()) {
-                Objective objective = myObjectives.get(row);
+                TaskObjective objective = myObjectives.get(row);
                 switch (col) {
                     case 0:
                         result = String.valueOf(objective.getId());
@@ -160,7 +119,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int col) {
         if (row >= 0) {
             if (row >= myObjectives.size()) {
-                createObjective((Objective) value);
+                createObjective((TaskObjective) value);
             } else {
                 updateObjective(value, row, col);
             }
@@ -171,7 +130,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     private void updateObjective(Object value, int row, int col) {
-        Objective updateTarget = myObjectives.get(row);
+        TaskObjective updateTarget = myObjectives.get(row);
         switch (col) {
             case 4: {
                 updateTarget.check(((Boolean) value).booleanValue());
@@ -186,30 +145,32 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 updateTarget.setName(String.valueOf(value));
                 break;
             }
-            /*case 1: {
+            case 1: {
                 if (value == null) {
-                    updateTarget.delete();
-                    myAssignments.remove(row);
+                    //updateTarget.delete();
+                    myObjectives.remove(row);
                     fireTableRowsDeleted(row, row);
-                } else if (value instanceof HumanResource) {
-                    float load = updateTarget.getLoad();
-                    boolean coord = updateTarget.isCoordinator();
-                    updateTarget.delete();
+                } else if (value instanceof TaskObjective) {
+                    /*//float load = updateTarget.getLoad();
+                    boolean check = updateTarget.isChecked();
+                    //updateTarget.delete();
                     myMutator.deleteAssignment(updateTarget.getResource());
                     ResourceAssignment newAssignment = myMutator.addAssignment((HumanResource) value);
                     newAssignment.setLoad(load);
                     newAssignment.setCoordinator(coord);
-                    myAssignments.set(row, newAssignment);
+                    myAssignments.set(row, newAssignment);*/
+                    boolean check = updateTarget.isChecked();
+
                 }
                 break;
 
-            }*/
+            }
             default:
                 break;
         }
     }
 
-    private void createObjective(Objective value) {
+    private void createObjective(TaskObjective value) {
         /*if (value instanceof Objective) {
             ResourceAssignment newAssignment = myMutator.addAssignment((HumanResource) value);
             newAssignment.setLoad(100);
@@ -221,7 +182,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
             newAssignment.setRoleForAssignment(newAssignment.getResource().getRole());
             myAssignments.add(newAssignment);
             fireTableRowsInserted(myAssignments.size(), myAssignments.size());*/
-            Objective newObjective = new Objective(value.getId(), value.getName(), value.getPercentage());
+            TaskObjective newObjective = new TaskObjectiveCollectionImpl.Objective(value.getId(), value.getName(), value.getPercentage());
             newObjective.setPercentage(0);
             newObjective.check(false);
             myObjectives.add(newObjective);
