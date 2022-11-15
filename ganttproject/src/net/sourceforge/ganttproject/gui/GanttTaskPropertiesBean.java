@@ -95,6 +95,12 @@ public class GanttTaskPropertiesBean extends JPanel {
 
   private JButton bWebLink;
 
+  private JCheckBox emailCheckbox;
+
+  private JSlider percentageSlider;
+
+  private JSpinner percentageSpinner;
+
   private JSpinner percentCompleteSlider;
 
   private JComboBox priorityComboBox;
@@ -257,8 +263,8 @@ public class GanttTaskPropertiesBean extends JPanel {
     propertiesPanel.add(weblinkBox);
 
 
-    final JCheckBox emailCheckbox = new JCheckBox();
-    final JSlider percentageSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+    emailCheckbox = new JCheckBox();
+    percentageSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
     percentageSlider.setMajorTickSpacing(25);
     percentageSlider.setMinorTickSpacing(5);
     percentageSlider.setPaintTicks(true);
@@ -266,7 +272,7 @@ public class GanttTaskPropertiesBean extends JPanel {
     percentageSlider.setEnabled(false);
 
     SpinnerModel model = new SpinnerNumberModel(percentageSlider.getValue(), 0, 100, 1);
-    final JSpinner percentageSpinner = new JSpinner(model);
+    percentageSpinner = new JSpinner(model);
     percentageSpinner.setMaximumSize(new Dimension(25,20));
     percentageSpinner.setEnabled(false);
 
