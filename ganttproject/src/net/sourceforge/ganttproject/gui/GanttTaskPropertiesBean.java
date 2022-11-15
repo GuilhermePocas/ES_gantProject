@@ -47,6 +47,9 @@ import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXHyperlink;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -252,6 +255,51 @@ public class GanttTaskPropertiesBean extends JPanel {
     });
     propertiesPanel.add(new JLabel(language.getText("webLink")));
     propertiesPanel.add(weblinkBox);
+
+
+    final JCheckBox emailCheckbox = new JCheckBox();
+    final JSlider percentageSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+    percentageSlider.setMajorTickSpacing(25);
+    percentageSlider.setMinorTickSpacing(5);
+    percentageSlider.setPaintTicks(true);
+    percentageSlider.setPaintLabels(true);
+    percentageSlider.setEnabled(false);
+
+    SpinnerModel model = new SpinnerNumberModel(percentageSlider.getValue(), 0, 100, 1);
+    final JSpinner percentageSpinner = new JSpinner(model);
+    percentageSpinner.setMaximumSize(new Dimension(25,20));
+    percentageSpinner.setEnabled(false);
+
+    emailCheckbox.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        percentageSlider.setEnabled(emailCheckbox.isSelected());
+        percentageSpinner.setEnabled(emailCheckbox.isSelected());
+      }
+    });
+
+    percentageSlider.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        percentageSpinner.setValue(percentageSlider.getValue());
+      }
+    });
+
+    percentageSpinner.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        percentageSlider.setValue((int)percentageSpinner.getValue());
+      }
+    });
+
+    Box emailNotificationBox = Box.createHorizontalBox();
+    emailNotificationBox.add(emailCheckbox);
+    emailNotificationBox.add(percentageSlider);
+    emailNotificationBox.add(percentageSpinner);
+    emailNotificationBox.add(new JLabel(" %"));
+    propertiesPanel.add(new JLabel("Email Notification"));
+    propertiesPanel.add(emailNotificationBox);
+
 
     SpringUtilities.makeCompactGrid(propertiesPanel, propertiesPanel.getComponentCount() / 2, 2, 1, 1, 5, 5);
 
