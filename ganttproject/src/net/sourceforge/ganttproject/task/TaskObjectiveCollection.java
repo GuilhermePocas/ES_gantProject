@@ -23,4 +23,8 @@ public interface TaskObjectiveCollection {
     void removeIndex(int index);
 
     void removeAll(List<TaskObjective> selected);
+
+    int getTotalPercentage();
+
+    boolean reachedTheMaximum();
 }

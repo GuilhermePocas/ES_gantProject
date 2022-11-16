@@ -112,14 +112,14 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        return true; //col == 4;
+        return !(col == 0);
     }
 
     @Override
     public void setValueAt(Object value, int row, int col) {
         if (row >= 0) {
             if (row >= myObjectives.size()) {
-                createObjective((TaskObjective) value);
+                createObjective(value);
                 //myObjectives.add(new TaskObjectiveImpl(0, "asd", 1));
                 //fireTableRowsInserted(myObjectives.size(), myObjectives.size());
             } else {
@@ -134,20 +134,20 @@ public class ObjectivesTableModel extends AbstractTableModel {
     private void updateObjective(Object value, int row, int col) {
         TaskObjective updateTarget = myObjectives.get(row);
         switch (col) {
-            case 4: {
+            case 3: {
                 updateTarget.check(((Boolean) value).booleanValue());
                 break;
             }
-            case 3: {
+            case 2: {
                 int loadAsInt = Integer.parseInt(String.valueOf(value));
                 updateTarget.setPercentage(loadAsInt);
                 break;
             }
-            case 2: {
+            case 1: {
                 updateTarget.setName(String.valueOf(value));
                 break;
             }
-            case 1: {
+            case 0: {
                 if (value == null) {
                     //updateTarget.delete();
                     myObjectives.removeIndex(row);
@@ -188,11 +188,24 @@ public class ObjectivesTableModel extends AbstractTableModel {
             newAssignment.setRoleForAssignment(newAssignment.getResource().getRole());
             myAssignments.add(newAssignment);
             fireTableRowsInserted(myAssignments.size(), myAssignments.size());*/
-
-        TaskObjective newObjective = new TaskObjectiveImpl(1, "", 0);
-        newObjective.setPercentage(0);
-        newObjective.check(false);
-        myObjectives.add(newObjective);
+        String name = null;
+        int percentage = 0;
+        boolean isChecked = false;
+        if (value instanceof TaskObjective) {
+            name= ((TaskObjective) value).getName();
+            percentage = ((TaskObjective) value).getPercentage();
+            isChecked = ((TaskObjective) value).isChecked();
+        }
+        int id = 0;
+        if (getMyObjectives() == null){
+            id = 0;
+        }
+        else
+            id = myObjectives.size();
+        TaskObjective newObjective = new TaskObjectiveImpl(id, name , percentage, isChecked);
+        //newObjective.setPercentage(percentage);
+        //newObjective.check(isChecked);
+        //myObjectives.add(newObjective);
         myTask.getObjectivesCollection().add(newObjective);
         fireTableRowsInserted(myObjectives.size(), myObjectives.size());
         //}

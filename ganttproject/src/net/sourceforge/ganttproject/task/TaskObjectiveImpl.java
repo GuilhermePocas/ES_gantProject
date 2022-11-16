@@ -6,11 +6,11 @@ public class TaskObjectiveImpl implements TaskObjective{
         private int percentage;
         private boolean checked;
 
-        public TaskObjectiveImpl(int id, String name, int percentage) {
+        public TaskObjectiveImpl(int id, String name, int percentage, boolean checked) {
             this.id = id;
             this.name = name;
             this.percentage = percentage;
-            this.checked = false;
+            this.checked = checked;
         }
 
         public String getName() {

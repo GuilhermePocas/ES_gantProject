@@ -11,6 +11,8 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     private final Task myTask;
 
+    private int totalPercentage;
+
     public TaskObjectiveCollectionImpl(Task myTask) {
         myObjectives = new ArrayList<>();
         this.myTask = myTask;
@@ -28,6 +30,7 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     @Override
     public void add(TaskObjective objective) {
         myObjectives.add(objective);
+        totalPercentage += objective.getPercentage();
     }
 
 
@@ -46,6 +49,7 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     }
     @Override
     public void remove(TaskObjective obj){// index == row-1
+        totalPercentage-= obj.getPercentage();
         myObjectives.remove(obj);
     }
 
@@ -59,4 +63,13 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         myObjectives.removeAll(selected);
     }
 
+    @Override
+    public int getTotalPercentage(){
+        return totalPercentage;
+    }
+
+    @Override
+    public boolean reachedTheMaximum(){
+        return totalPercentage == 100;
+    }
 }
