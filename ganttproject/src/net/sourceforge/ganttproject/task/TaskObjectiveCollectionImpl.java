@@ -1,15 +1,11 @@
 package net.sourceforge.ganttproject.task;
 
-import net.sourceforge.ganttproject.resource.HumanResource;
-
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
-    public class Objective implements TaskObjective {
+    public static class Objective implements TaskObjective {
         private int id;
         private String name;
         private int percentage;
@@ -86,4 +82,19 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     public int size() {
         return myObjectives.size();
     }
+
+    @Override
+    public TaskObjective get(int index){ // index == row-1
+        return myObjectives.get(index);
+    }
+    @Override
+    public void remove(int index){// index == row-1
+        myObjectives.remove(index);
+    }
+
+    @Override
+    public void removeAll(List<TaskObjective> selected) {
+        myObjectives.removeAll(selected);
+    }
+
 }

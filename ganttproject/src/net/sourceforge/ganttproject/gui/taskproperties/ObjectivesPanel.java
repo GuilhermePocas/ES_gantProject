@@ -11,6 +11,7 @@ import net.sourceforge.ganttproject.roles.RoleManager;
 import net.sourceforge.ganttproject.task.ResourceAssignment;
 import net.sourceforge.ganttproject.task.Task;
 import net.sourceforge.ganttproject.task.TaskManager;
+import net.sourceforge.ganttproject.task.TaskObjectiveCollectionImpl;
 import net.sourceforge.ganttproject.task.dependency.TaskDependency;
 import net.sourceforge.ganttproject.task.dependency.TaskDependencyConstraint;
 import net.sourceforge.ganttproject.task.dependency.constraint.FinishFinishConstraintImpl;
@@ -66,8 +67,8 @@ public class ObjectivesPanel {
         //CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(1), myHRManager.getResources().toArray());
         //CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(4), myRoleManager.getEnabledRoles());
 
-        AbstractTableAndActionsComponent<Objective> tableAndActions =
-                new AbstractTableAndActionsComponent<Objective>(getTable()) {
+        AbstractTableAndActionsComponent<TaskObjectiveCollectionImpl.Objective> tableAndActions =
+                new AbstractTableAndActionsComponent<TaskObjectiveCollectionImpl.Objective>(getTable()) {
                     @Override
                     protected void onAddEvent() {
                         getTable().editCellAt(myModel.getRowCount() - 1, 1);
@@ -82,8 +83,8 @@ public class ObjectivesPanel {
                     }
 
                     @Override
-                    protected Objective getValue(int row) {
-                        java.util.List<Objective> values = myModel.getMyObjectives();
+                    protected TaskObjectiveCollectionImpl.Objective getValue(int row) {
+                        java.util.List<TaskObjectiveCollectionImpl.Objective> values = myModel.getMyObjectives();
                         return (row >= 0 && row < values.size()) ? values.get(row) : null;
                     }
                 };

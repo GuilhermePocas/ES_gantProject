@@ -185,13 +185,13 @@ public class ObjectivesTableModel extends AbstractTableModel {
             TaskObjective newObjective = new TaskObjectiveCollectionImpl.Objective(value.getId(), value.getName(), value.getPercentage());
             newObjective.setPercentage(0);
             newObjective.check(false);
-            myObjectives.add(newObjective);
+            myObjectives.addAssignment(newObjective);
             fireTableRowsInserted(myObjectives.size(), myObjectives.size());
         //}
     }
 
-    public List<Objective> getMyObjectives() {
-        return Collections.unmodifiableList(myObjectives);
+    public List<TaskObjectiveCollectionImpl.Objective> getMyObjectives() {
+        return Collections.unmodifiableList((List<TaskObjectiveCollectionImpl.Objective>) myObjectives);
     }
 
 /*    public void commit() {
@@ -203,7 +203,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     public void delete(int[] selectedRows) {
-        List<Objective> selected = new ArrayList<Objective>();
+        List<TaskObjective> selected = new ArrayList<>();
         for (int row : selectedRows) {
             if (row < myObjectives.size()) {
                 selected.add(myObjectives.get(row));
