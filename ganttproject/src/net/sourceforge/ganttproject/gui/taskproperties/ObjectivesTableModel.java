@@ -112,7 +112,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        return col == 4;
+        return true; //col == 4;
     }
 
     @Override
@@ -120,6 +120,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
         if (row >= 0) {
             if (row >= myObjectives.size()) {
                 createObjective((TaskObjective) value);
+                //myObjectives.add(new TaskObjectiveImpl(0, "asd", 1));
+                //fireTableRowsInserted(myObjectives.size(), myObjectives.size());
             } else {
                 updateObjective(value, row, col);
             }
@@ -148,9 +150,9 @@ public class ObjectivesTableModel extends AbstractTableModel {
             case 1: {
                 if (value == null) {
                     //updateTarget.delete();
-                    myObjectives.remove(row);
+                    myObjectives.removeIndex(row);
                     fireTableRowsDeleted(row, row);
-                } else if (value instanceof TaskObjective) {
+                }// else if (value instanceof TaskObjective) {
                     /*//float load = updateTarget.getLoad();
                     boolean check = updateTarget.isChecked();
                     //updateTarget.delete();
@@ -159,9 +161,13 @@ public class ObjectivesTableModel extends AbstractTableModel {
                     newAssignment.setLoad(load);
                     newAssignment.setCoordinator(coord);
                     myAssignments.set(row, newAssignment);*/
-                    boolean check = updateTarget.isChecked();
+                    /*boolean check = updateTarget.isChecked();
+                    myObjectives.remove(updateTarget);
+                    TaskObjective newObjective = new TaskObjectiveCollectionImpl.Objective(updateTarget.getId(),
+                            updateTarget.getName(), updateTarget.getPercentage());
+                    if(check) newObjective.check();
 
-                }
+                }*/
                 break;
 
             }
@@ -170,7 +176,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    private void createObjective(TaskObjective value) {
+    private void createObjective(Object value) {
         /*if (value instanceof Objective) {
             ResourceAssignment newAssignment = myMutator.addAssignment((HumanResource) value);
             newAssignment.setLoad(100);
@@ -182,16 +188,18 @@ public class ObjectivesTableModel extends AbstractTableModel {
             newAssignment.setRoleForAssignment(newAssignment.getResource().getRole());
             myAssignments.add(newAssignment);
             fireTableRowsInserted(myAssignments.size(), myAssignments.size());*/
-            TaskObjective newObjective = new TaskObjectiveCollectionImpl.Objective(value.getId(), value.getName(), value.getPercentage());
-            newObjective.setPercentage(0);
-            newObjective.check(false);
-            myObjectives.addAssignment(newObjective);
-            fireTableRowsInserted(myObjectives.size(), myObjectives.size());
+
+        TaskObjective newObjective = new TaskObjectiveImpl(1, "", 0);
+        newObjective.setPercentage(0);
+        newObjective.check(false);
+        myObjectives.add(newObjective);
+        myTask.getObjectivesCollection().add(newObjective);
+        fireTableRowsInserted(myObjectives.size(), myObjectives.size());
         //}
     }
 
-    public List<TaskObjectiveCollectionImpl.Objective> getMyObjectives() {
-        return Collections.unmodifiableList((List<TaskObjectiveCollectionImpl.Objective>) myObjectives);
+    public List<TaskObjective> getMyObjectives() {
+        return Collections.unmodifiableList(myObjectives.getObjectivesList());
     }
 
 /*    public void commit() {

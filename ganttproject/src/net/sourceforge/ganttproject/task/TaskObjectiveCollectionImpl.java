@@ -5,47 +5,7 @@ import java.util.List;
 
 public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
-    public static class Objective implements TaskObjective {
-        private int id;
-        private String name;
-        private int percentage;
-        private boolean checked;
 
-        public Objective(int id, String name, int percentage) {
-            this.id = id;
-            this.name = name;
-            this.percentage = percentage;
-            this.checked = false;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public int getPercentage() {
-            return percentage;
-        }
-
-        public boolean isChecked() {
-            return checked;
-        }
-
-        public void check(boolean value) {
-            checked =  value;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setPercentage(int percentage) {
-            this.percentage = percentage;
-        }
-    }
 
     private final List<TaskObjective> myObjectives;
 
@@ -61,18 +21,15 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return (TaskObjective[]) myObjectives.toArray();
     }
 
-    @Override
-    public void addAssignment(TaskObjective objective) {
-        myObjectives.add(objective);
+    public List<TaskObjective> getObjectivesList() {
+        return myObjectives;
     }
 
     @Override
-    public void deleteAssignment(int id) {
-        for(TaskObjective o : myObjectives) {
-            if(o.getId() == id)
-                myObjectives.remove(o);
-        }
+    public void add(TaskObjective objective) {
+        myObjectives.add(objective);
     }
+
 
     @Override
     public Task getTask() {
@@ -88,7 +45,12 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return myObjectives.get(index);
     }
     @Override
-    public void remove(int index){// index == row-1
+    public void remove(TaskObjective obj){// index == row-1
+        myObjectives.remove(obj);
+    }
+
+    @Override
+    public void removeIndex(int index){// index == row-1
         myObjectives.remove(index);
     }
 

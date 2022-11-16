@@ -8,9 +8,9 @@ public interface TaskObjectiveCollection {
 
     TaskObjective[] getObjectives();
 
-    void addAssignment(TaskObjective resource);
+    List<TaskObjective> getObjectivesList();
 
-    void deleteAssignment(int id);
+    void add(TaskObjective obj);
 
     Task getTask();
 
@@ -18,7 +18,9 @@ public interface TaskObjectiveCollection {
 
     TaskObjective get(int index);
 
-    void remove(int index);
+    void remove(TaskObjective obj);
+
+    void removeIndex(int index);
 
     void removeAll(List<TaskObjective> selected);
 }
