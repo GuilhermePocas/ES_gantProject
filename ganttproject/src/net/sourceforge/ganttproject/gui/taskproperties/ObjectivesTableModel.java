@@ -139,9 +139,12 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 break;
             }
             case 2: {
-                int loadAsInt = Integer.parseInt(String.valueOf(value));
-                updateTarget.setPercentage(loadAsInt);
-                break;
+                if(myTask.getObjectivesCollection().getTotalPercentage() >= 100) {
+                    updateTarget.setPercentage(5);
+                }else {
+                    int loadAsInt = Integer.parseInt(String.valueOf(value));
+                    updateTarget.setPercentage(loadAsInt);
+                }
             }
             case 1: {
                 updateTarget.setName(String.valueOf(value));

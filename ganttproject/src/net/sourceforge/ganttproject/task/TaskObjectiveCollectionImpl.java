@@ -13,6 +13,8 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     private int totalPercentage;
 
+    private static int MAX = 100;
+
     public TaskObjectiveCollectionImpl(Task myTask) {
         myObjectives = new ArrayList<>();
         this.myTask = myTask;
@@ -70,6 +72,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     @Override
     public boolean reachedTheMaximum(){
-        return totalPercentage == 100;
+        return totalPercentage == MAX;
     }
 }
