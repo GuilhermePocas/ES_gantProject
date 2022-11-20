@@ -1,23 +1,12 @@
 package net.sourceforge.ganttproject.gui.taskproperties;
 
-import com.google.common.base.Objects;
-import net.sourceforge.ganttproject.GPLogger;
-import net.sourceforge.ganttproject.language.GanttLanguage;
-import net.sourceforge.ganttproject.resource.HumanResource;
-import net.sourceforge.ganttproject.roles.Role;
-import net.sourceforge.ganttproject.task.*;
-import net.sourceforge.ganttproject.task.dependency.TaskDependency;
-import net.sourceforge.ganttproject.task.dependency.TaskDependencyCollectionMutator;
-import net.sourceforge.ganttproject.task.dependency.TaskDependencyConstraint;
-import net.sourceforge.ganttproject.task.dependency.TaskDependencyException;
-import net.sourceforge.ganttproject.task.dependency.constraint.ConstraintImpl;
-import net.sourceforge.ganttproject.task.dependency.constraint.FinishStartConstraintImpl;
 
-import javax.swing.*;
+import net.sourceforge.ganttproject.task.*;
+
+
+
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumn;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +21,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         private final Class<?> myClass;
 
         Column(String key, Class<?> clazz) {
-            myName = key;//GanttLanguage.getInstance().getText(key);
+            myName = key;
             myClass = clazz;
         }
 
@@ -49,14 +38,12 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private final Task myTask;
 
-    //private final ResourceAssignmentMutator myMutator;
 
     private boolean isChanged = false;
 
     public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
         this.myObjectives = myObjectivesCol;
         myTask = myObjectivesCol.getTask();
-        //myMutator = assignmentCollection.createMutator();
     }
 
     @Override
@@ -119,9 +106,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int col) {
         if (row >= 0) {
             if (row >= myObjectives.size()) {
-                createObjective(value);
-                //myObjectives.add(new TaskObjectiveImpl(0, "asd", 1));
-                //fireTableRowsInserted(myObjectives.size(), myObjectives.size());
+                createObjective(value, col);
             } else {
                 updateObjective(value, row, col);
             }
@@ -139,12 +124,17 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 break;
             }
             case 2: {
-                if(myTask.getObjectivesCollection().getTotalPercentage() >= 100) {
-                    updateTarget.setPercentage(5);
-                }else {
-                    int loadAsInt = Integer.parseInt(String.valueOf(value));
+                int loadAsInt = Integer.parseInt(String.valueOf(value));
+                if(myObjectives.reachedTheMaximum()) {
+                    updateTarget.setPercentage(0);
+                    throw new Over100Exception();
+                }else if(loadAsInt + myObjectives.getTotalPercentage() > 100){
+                    updateTarget.setPercentage(100 - myObjectives.getTotalPercentage());
+                    throw new Over100Exception();
+                } else {
                     updateTarget.setPercentage(loadAsInt);
                 }
+                break;
             }
             case 1: {
                 updateTarget.setName(String.valueOf(value));
@@ -152,75 +142,62 @@ public class ObjectivesTableModel extends AbstractTableModel {
             }
             case 0: {
                 if (value == null) {
-                    //updateTarget.delete();
                     myObjectives.removeIndex(row);
                     fireTableRowsDeleted(row, row);
-                }// else if (value instanceof TaskObjective) {
-                    /*//float load = updateTarget.getLoad();
-                    boolean check = updateTarget.isChecked();
-                    //updateTarget.delete();
-                    myMutator.deleteAssignment(updateTarget.getResource());
-                    ResourceAssignment newAssignment = myMutator.addAssignment((HumanResource) value);
-                    newAssignment.setLoad(load);
-                    newAssignment.setCoordinator(coord);
-                    myAssignments.set(row, newAssignment);*/
-                    /*boolean check = updateTarget.isChecked();
-                    myObjectives.remove(updateTarget);
-                    TaskObjective newObjective = new TaskObjectiveCollectionImpl.Objective(updateTarget.getId(),
-                            updateTarget.getName(), updateTarget.getPercentage());
-                    if(check) newObjective.check();
-
-                }*/
+                }
                 break;
-
             }
             default:
                 break;
         }
     }
 
-    private void createObjective(Object value) {
-        /*if (value instanceof Objective) {
-            ResourceAssignment newAssignment = myMutator.addAssignment((HumanResource) value);
-            newAssignment.setLoad(100);
-
-            boolean coord = false;
-            if (myAssignments.isEmpty())
-                coord = true;
-            newAssignment.setCoordinator(coord);
-            newAssignment.setRoleForAssignment(newAssignment.getResource().getRole());
-            myAssignments.add(newAssignment);
-            fireTableRowsInserted(myAssignments.size(), myAssignments.size());*/
-        String name = null;
-        int percentage = 0;
-        boolean isChecked = false;
-        if (value instanceof TaskObjective) {
-            name= ((TaskObjective) value).getName();
-            percentage = ((TaskObjective) value).getPercentage();
-            isChecked = ((TaskObjective) value).isChecked();
-        }
+    private void createObjective(Object value, int col) {
         int id = 0;
         if (getMyObjectives() == null){
             id = 0;
         }
         else
             id = myObjectives.size();
+        String name = "Objective " + (id+1);
+        int percentage = 0;
+        boolean isChecked = false;
+        switch (col) {
+            case 1:
+                name = (String) value;
+                break;
+            case 2:
+                int perc = Integer.parseInt((String) value);
+                if(myObjectives.reachedTheMaximum()) {
+                    percentage = 0;
+                    throw new Over100Exception();
+                }else if(perc + myObjectives.getTotalPercentage() > 100){
+                    percentage = 100 - myObjectives.getTotalPercentage();
+                    throw new Over100Exception();
+                } else{
+                    percentage = perc;
+                }
+                break;
+            case 3:
+                isChecked = (boolean) value;
+                break;
+            default:
+                break;
+        }
+        if (value instanceof TaskObjective) {
+            name= ((TaskObjective) value).getName();
+            percentage = ((TaskObjective) value).getPercentage();
+            isChecked = ((TaskObjective) value).isChecked();
+        }
+
         TaskObjective newObjective = new TaskObjectiveImpl(id, name , percentage, isChecked);
-        //newObjective.setPercentage(percentage);
-        //newObjective.check(isChecked);
-        //myObjectives.add(newObjective);
-        myTask.getObjectivesCollection().add(newObjective);
+        myObjectives.add(newObjective);
         fireTableRowsInserted(myObjectives.size(), myObjectives.size());
-        //}
     }
 
     public List<TaskObjective> getMyObjectives() {
         return Collections.unmodifiableList(myObjectives.getObjectivesList());
     }
-
-/*    public void commit() {
-        myMutator.commit();
-    }*/
 
     public boolean isChanged() {
         return isChanged;
@@ -233,9 +210,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 selected.add(myObjectives.get(row));
             }
         }
-        /*for (Objective obj : selected) {
-            myObjectives.remove(obj);
-        }*/
         myObjectives.removeAll(selected);
         fireTableDataChanged();
     }

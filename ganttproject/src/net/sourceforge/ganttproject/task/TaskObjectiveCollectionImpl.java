@@ -72,6 +72,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     @Override
     public boolean reachedTheMaximum(){
-        return totalPercentage == MAX;
+        return totalPercentage >= MAX;
     }
 }
