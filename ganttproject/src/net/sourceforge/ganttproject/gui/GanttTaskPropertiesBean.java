@@ -124,6 +124,10 @@ public class GanttTaskPropertiesBean extends JPanel {
 
   private String originalWebLink;
 
+  private int originalEmailNotificationPercentage;
+
+  private boolean originalEmailNotificationActivated;
+
   private boolean originalIsMilestone;
 
   private GanttCalendar originalStartDate;
@@ -264,7 +268,7 @@ public class GanttTaskPropertiesBean extends JPanel {
 
 
     emailCheckbox = new JCheckBox();
-    percentageSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+    percentageSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
     percentageSlider.setMajorTickSpacing(25);
     percentageSlider.setMinorTickSpacing(5);
     percentageSlider.setPaintTicks(true);
@@ -455,6 +459,10 @@ public class GanttTaskPropertiesBean extends JPanel {
       if (originalWebLink == null || !originalWebLink.equals(getWebLink())) {
         mutator.setWebLink(getWebLink());
       }
+
+      mutator.setEmailNotificationPercentage(getEmailNotificationPercentage());
+      mutator.setEmailNotificationActivated(getEmailNotificationActivated());
+
       if (mileStoneCheckBox1 != null) {
         if (originalIsMilestone != isMilestone()) {
           mutator.setMilestone(isMilestone());
@@ -540,6 +548,12 @@ public class GanttTaskPropertiesBean extends JPanel {
 
     tfWebLink.setText(originalWebLink);
 
+    percentageSlider.setValue(originalEmailNotificationPercentage);
+
+    emailCheckbox.setSelected(originalEmailNotificationActivated);
+    percentageSlider.setEnabled(emailCheckbox.isSelected());
+    percentageSpinner.setEnabled(emailCheckbox.isSelected());
+
     if (selectedTasks[0].shapeDefined()) {
       for (int j = 0; j < ShapeConstants.PATTERN_LIST.length; j++) {
         if (originalShape.equals(ShapeConstants.PATTERN_LIST[j])) {
@@ -590,6 +604,14 @@ public class GanttTaskPropertiesBean extends JPanel {
     return text == null ? "" : text.trim();
   }
 
+  private int getEmailNotificationPercentage() {
+    return percentageSlider.getValue();
+  }
+
+  private boolean getEmailNotificationActivated() {
+    return emailCheckbox.isSelected();
+  }
+
   private int getPercentComplete() {
     return ((Integer) percentCompleteSlider.getValue()).hashCode();
   }
@@ -624,6 +646,8 @@ public class GanttTaskPropertiesBean extends JPanel {
   private void storeOriginalValues(GanttTask task) {
     originalName = task.getName();
     originalWebLink = task.getWebLink();
+    originalEmailNotificationPercentage = task.getEmailNotificationPercentage();
+    originalEmailNotificationActivated = task.getEmailNotificationActivated();
     originalIsMilestone = task.isLegacyMilestone();
     originalStartDate = task.getStart();
     originalEndDate = task.getEnd();

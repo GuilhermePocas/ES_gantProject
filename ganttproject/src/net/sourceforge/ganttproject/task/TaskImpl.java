@@ -80,6 +80,10 @@ public class TaskImpl implements Task {
 
   private String myWebLink = "";
 
+  private int emailNotificationPercentage = 0;
+
+  private boolean emailNotificationActivated = false;
+
   private boolean isMilestone;
 
   boolean isProjectTask;
@@ -178,6 +182,8 @@ public class TaskImpl implements Task {
     myObjectives = copy.myObjectives;
     myName = copy.myName;
     myWebLink = copy.myWebLink;
+    emailNotificationPercentage = copy.emailNotificationPercentage;
+    emailNotificationActivated = copy.emailNotificationActivated;
     isMilestone = copy.isMilestone;
     isProjectTask = copy.isProjectTask;
     myPriority = copy.myPriority;
@@ -256,6 +262,14 @@ public class TaskImpl implements Task {
 
   public String getWebLink() {
     return myWebLink;
+  }
+
+  public int getEmailNotificationPercentage() {
+    return emailNotificationPercentage;
+  }
+
+  public boolean getEmailNotificationActivated() {
+    return emailNotificationActivated;
   }
 
   @Override
@@ -863,6 +877,26 @@ public class TaskImpl implements Task {
     }
 
     @Override
+    public void setEmailNotificationPercentage(final int percentage) {
+      myCommands.add(new Runnable() {
+        @Override
+        public void run() {
+          TaskImpl.this.setEmailNotificationPercentage(percentage);
+        }
+      });
+    }
+
+    @Override
+    public void setEmailNotificationActivated(final boolean activated) {
+      myCommands.add(new Runnable() {
+        @Override
+        public void run() {
+          TaskImpl.this.setEmailNotificationActivated(activated);
+        }
+      });
+    }
+
+    @Override
     public void setNotes(final String notes) {
       myCommands.add(new Runnable() {
         @Override
@@ -956,6 +990,16 @@ public class TaskImpl implements Task {
   @Override
   public void setWebLink(String webLink) {
     myWebLink = webLink;
+  }
+
+  @Override
+  public void setEmailNotificationPercentage(int percentage) {
+    emailNotificationPercentage = percentage;
+  }
+
+  @Override
+  public void setEmailNotificationActivated(boolean activated) {
+    emailNotificationActivated = activated;
   }
 
   @Override

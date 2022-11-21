@@ -56,6 +56,10 @@ public interface MutableTask {
   /** Sets the weblink for the task */
   void setWebLink(String webLink);
 
+  void setEmailNotificationPercentage(int percentage);
+
+  void setEmailNotificationActivated(boolean selected);
+
   void setNotes(String notes);
 
   void addNotes(String notes);
