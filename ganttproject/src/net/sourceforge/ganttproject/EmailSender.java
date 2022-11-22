@@ -24,7 +24,7 @@ public class EmailSender {
     private EmailSender() {
         Properties properties = System.getProperties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "25");
+        properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
 
@@ -35,19 +35,15 @@ public class EmailSender {
         });
     }
 
-    public void sendEmail(String[] recipients, String taskName, int percentage) {
+    public void sendEmail(String recipients, String taskName, int percentage) {
+        if(recipients.length() == 0) return;
         try {
             MimeMessage message = new MimeMessage(session);
 
             String subject = String.format(SUBJECT_TEMPLATE, taskName);
             String body = String.format(BODY_TEMPLATE, taskName, percentage);
 
-            String recipientAddresses = "";
-            for(String recipient : recipients)
-                recipientAddresses += recipient+",";
-            recipientAddresses = recipientAddresses.substring(0, recipientAddresses.length()-1);
-
-            message.setRecipients(Message.RecipientType.TO, recipientAddresses);
+            message.setRecipients(Message.RecipientType.TO, recipients);
             message.setSubject(subject);
             message.setText(body);
 

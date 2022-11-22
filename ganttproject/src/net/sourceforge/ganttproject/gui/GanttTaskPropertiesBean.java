@@ -56,6 +56,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import java.util.Hashtable;
+
 /**
  * Real panel for editing task properties
  */
@@ -267,15 +269,28 @@ public class GanttTaskPropertiesBean extends JPanel {
     propertiesPanel.add(weblinkBox);
 
 
+    int minPercentage = selectedTasks[0].getEmailScheduler().getMinPercentage();
+
     emailCheckbox = new JCheckBox();
-    percentageSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+
+    if(minPercentage == -1) {
+      emailCheckbox.setEnabled(false);
+      minPercentage = 0; // need to reset the value so that slider and spinner look good when disabled
+    }
+
+    percentageSlider = new JSlider(JSlider.HORIZONTAL, minPercentage, 100, minPercentage);
     percentageSlider.setMajorTickSpacing(25);
     percentageSlider.setMinorTickSpacing(5);
     percentageSlider.setPaintTicks(true);
+
+    Hashtable labelTable = new Hashtable();
+    labelTable.put(new Integer(minPercentage), new JLabel(String.valueOf(minPercentage)));
+    labelTable.put(new Integer(100), new JLabel("100"));
+    percentageSlider.setLabelTable(labelTable);
     percentageSlider.setPaintLabels(true);
     percentageSlider.setEnabled(false);
 
-    SpinnerModel model = new SpinnerNumberModel(percentageSlider.getValue(), 0, 100, 1);
+    SpinnerModel model = new SpinnerNumberModel(percentageSlider.getValue(), minPercentage, 100, 1);
     percentageSpinner = new JSpinner(model);
     percentageSpinner.setMaximumSize(new Dimension(25,20));
     percentageSpinner.setEnabled(false);
@@ -605,14 +620,6 @@ public class GanttTaskPropertiesBean extends JPanel {
     return text == null ? "" : text.trim();
   }
 
-  private int getEmailNotificationPercentage() {
-    return percentageSlider.getValue();
-  }
-
-  private boolean getEmailNotificationActivated() {
-    return emailCheckbox.isSelected();
-  }
-
   private int getPercentComplete() {
     return ((Integer) percentCompleteSlider.getValue()).hashCode();
   }
@@ -636,6 +643,15 @@ public class GanttTaskPropertiesBean extends JPanel {
   private GanttCalendar getThird() {
     return myThird;
   }
+
+    private int getEmailNotificationPercentage() {
+    return percentageSlider.getValue();
+  }
+
+  private boolean getEmailNotificationActivated() {
+    return emailCheckbox.isSelected();
+  }
+
 
 
 

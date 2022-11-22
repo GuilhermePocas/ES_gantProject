@@ -24,6 +24,7 @@ import biz.ganttproject.core.time.TimeDuration;
 import net.sourceforge.ganttproject.document.Document;
 import net.sourceforge.ganttproject.gui.taskproperties.ObjectivesTableModel;
 import net.sourceforge.ganttproject.task.dependency.TaskDependencySlice;
+import net.sourceforge.ganttproject.task.EmailScheduler;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -191,4 +192,10 @@ public interface Task extends MutableTask {
   boolean isSupertask();
 
   List<Document> getAttachments();
+
+  boolean getEmailNotificationActivated();
+
+  int getEmailNotificationPercentage();
+
+  EmailScheduler getEmailScheduler();
 }

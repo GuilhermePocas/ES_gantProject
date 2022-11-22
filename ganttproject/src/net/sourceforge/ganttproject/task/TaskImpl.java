@@ -29,7 +29,6 @@ import biz.ganttproject.core.time.GanttCalendar;
 import biz.ganttproject.core.time.TimeDuration;
 import biz.ganttproject.core.time.TimeDurationImpl;
 import biz.ganttproject.core.time.impl.GPTimeUnitStack;
-import net.sourceforge.ganttproject.EmailScheduler;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.ganttproject.GPLogger;
 import net.sourceforge.ganttproject.chart.MilestoneTaskFakeActivity;
@@ -46,6 +45,7 @@ import net.sourceforge.ganttproject.task.dependency.TaskDependencySliceAsDependa
 import net.sourceforge.ganttproject.task.dependency.TaskDependencySliceAsDependee;
 import net.sourceforge.ganttproject.task.dependency.TaskDependencySliceImpl;
 import net.sourceforge.ganttproject.task.hierarchy.TaskHierarchyItem;
+import net.sourceforge.ganttproject.task.EmailScheduler;
 import net.sourceforge.ganttproject.util.collect.Pair;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -81,9 +81,11 @@ public class TaskImpl implements Task {
 
   private String myWebLink = "";
 
+  private boolean emailNotificationActivated = false;
+
   private int emailNotificationPercentage = 0;
 
-  private boolean emailNotificationActivated = false;
+  private EmailScheduler emailScheduler;
 
   private boolean isMilestone;
 
@@ -163,7 +165,8 @@ public class TaskImpl implements Task {
     myNotes = "";
     bExpand = true;
     myColor = null;
-
+    emailScheduler = new EmailScheduler(this);
+    
     customValues = new CustomColumnsValues(myManager.getCustomPropertyManager());
   }
 
@@ -198,6 +201,9 @@ public class TaskImpl implements Task {
     myColor = copy.myColor;
     myNotes = copy.myNotes;
     bExpand = copy.bExpand;
+    emailNotificationActivated = copy.emailNotificationActivated;
+    emailNotificationPercentage = copy.emailNotificationPercentage;
+    emailScheduler = copy.emailScheduler;
     myCost.setValue(copy.myCost);
 
     myDependencySlice = new TaskDependencySliceImpl(this, myManager.getDependencyCollection(), TaskDependencySlice.COMPLETE_SLICE_FXN);
@@ -271,6 +277,10 @@ public class TaskImpl implements Task {
 
   public boolean getEmailNotificationActivated() {
     return emailNotificationActivated;
+  }
+
+  public EmailScheduler getEmailScheduler() {
+    return emailScheduler;
   }
 
   @Override
@@ -996,11 +1006,13 @@ public class TaskImpl implements Task {
   @Override
   public void setEmailNotificationActivated(boolean activated) {
     emailNotificationActivated = activated;
+    if(!activated) emailScheduler.cancelScheduledEmail();
   }
 
   @Override
   public void setEmailNotificationPercentage(int percentage) {
     emailNotificationPercentage = percentage;
+    emailScheduler.scheduleEmail();
   }
 
   @Override
@@ -1023,6 +1035,7 @@ public class TaskImpl implements Task {
     myStart = start;
     recalculateActivities();
     adjustNestedTasks();
+    emailScheduler.recalculateSchedule();
   }
 
   private void adjustNestedTasks() {
@@ -1048,6 +1061,7 @@ public class TaskImpl implements Task {
   public void setEnd(GanttCalendar end) {
     myEnd = end;
     recalculateActivities();
+    emailScheduler.recalculateSchedule();
   }
 
   @Override
