@@ -29,6 +29,7 @@ import biz.ganttproject.core.time.GanttCalendar;
 import biz.ganttproject.core.time.TimeDuration;
 import biz.ganttproject.core.time.TimeDurationImpl;
 import biz.ganttproject.core.time.impl.GPTimeUnitStack;
+import net.sourceforge.ganttproject.EmailScheduler;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.ganttproject.GPLogger;
 import net.sourceforge.ganttproject.chart.MilestoneTaskFakeActivity;
@@ -993,13 +994,15 @@ public class TaskImpl implements Task {
   }
 
   @Override
-  public void setEmailNotificationPercentage(int percentage) {
-    emailNotificationPercentage = percentage;
+  public void setEmailNotificationActivated(boolean activated) {
+    emailNotificationActivated = activated;
   }
 
   @Override
-  public void setEmailNotificationActivated(boolean activated) {
-    emailNotificationActivated = activated;
+  public void setEmailNotificationPercentage(int percentage) {
+    new EmailScheduler(getStart(), getEnd(), percentage);
+
+    emailNotificationPercentage = percentage;
   }
 
   @Override

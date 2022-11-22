@@ -460,9 +460,6 @@ public class GanttTaskPropertiesBean extends JPanel {
         mutator.setWebLink(getWebLink());
       }
 
-      mutator.setEmailNotificationPercentage(getEmailNotificationPercentage());
-      mutator.setEmailNotificationActivated(getEmailNotificationActivated());
-
       if (mileStoneCheckBox1 != null) {
         if (originalIsMilestone != isMilestone()) {
           mutator.setMilestone(isMilestone());
@@ -502,6 +499,10 @@ public class GanttTaskPropertiesBean extends JPanel {
         mutator.setShape(new ShapePaint((ShapePaint) shapeComboBox.getSelectedPaint(), Color.white,
             myTaskColorOption.getValue()));
       }
+
+      mutator.setEmailNotificationActivated(getEmailNotificationActivated());
+      if(getEmailNotificationActivated() && originalEmailNotificationPercentage != getEmailNotificationPercentage())
+        mutator.setEmailNotificationPercentage(getEmailNotificationPercentage());
 
       mutator.commit();
       myDependenciesPanel.commit();
