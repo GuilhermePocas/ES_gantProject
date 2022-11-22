@@ -1000,8 +1000,6 @@ public class TaskImpl implements Task {
 
   @Override
   public void setEmailNotificationPercentage(int percentage) {
-    new EmailScheduler(getStart(), getEnd(), percentage);
-
     emailNotificationPercentage = percentage;
   }
 
