@@ -99,17 +99,15 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        //todo isto tá mal
-        if(getValueAt(row, 3) != null){
-            return !(col == 3) && !((boolean) getValueAt(row, 3));
-        }
+        if(getValueAt(row, 3) != null && (boolean)getValueAt(row,3))
+            return col == 3;
         return !(col == 0);
     }
 
     @Override
     public void setValueAt(Object value, int row, int col) {
-        if(myTask.getNestedTasks().length > 0)
-            throw new Over100Exception();
+        if(myTask.isSupertask())
+            throw new SuperTaskObjectiveException();
         if (row >= 0) {
             if (row >= myObjectives.size()) {
                 createObjective(value, col);
