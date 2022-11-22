@@ -27,4 +27,6 @@ public interface TaskObjectiveCollection {
     int getTotalPercentage();
 
     boolean reachedTheMaximum();
+
+    void clear();
 }

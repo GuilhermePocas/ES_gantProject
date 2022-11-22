@@ -74,4 +74,10 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     public boolean reachedTheMaximum(){
         return totalPercentage >= MAX;
     }
+
+    public void clear() {
+        myObjectives.clear();
+        totalPercentage = 0;
+        myTask.setCompletionPercentage(0);
+    }
 }
