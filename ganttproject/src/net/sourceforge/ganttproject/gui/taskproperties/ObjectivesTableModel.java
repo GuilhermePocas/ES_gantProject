@@ -99,16 +99,29 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int col) {
+        //todo isto tá mal
+        if(getValueAt(row, 3) != null){
+            return !(col == 3) && !((boolean) getValueAt(row, 3));
+        }
         return !(col == 0);
     }
 
     @Override
     public void setValueAt(Object value, int row, int col) {
+        if(myTask.getNestedTasks().length > 0)
+            throw new Over100Exception();
         if (row >= 0) {
             if (row >= myObjectives.size()) {
                 createObjective(value, col);
             } else {
                 updateObjective(value, row, col);
+            }
+            if(col == 3) {
+                int percentage = myTask.getCompletionPercentage();
+                if((boolean) value)
+                    myTask.setCompletionPercentage(percentage + Integer.parseInt((String)getValueAt(row, 2)));
+                else
+                    myTask.setCompletionPercentage(percentage - Integer.parseInt((String) getValueAt(row, 2)));
             }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
@@ -153,6 +166,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     private void createObjective(Object value, int col) {
+
         int id = 0;
         if (getMyObjectives() == null){
             id = 0;
@@ -212,6 +226,10 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
         myObjectives.removeAll(selected);
         fireTableDataChanged();
+    }
+
+    public void clear() {
+        myObjectives.clear();
     }
 
 }
