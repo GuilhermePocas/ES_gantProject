@@ -391,6 +391,8 @@ public class TaskManagerImpl implements TaskManager {
         if (myWebLink != null) {
           task.setWebLink(myWebLink);
         }
+        task.setEmailNotificationActivated(emailNotificationActivated);
+        task.setEmailNotificationPercentage(emailNotificationPercentage);
         if (myCompletion != null) {
           task.setCompletionPercentage(myCompletion);
         }
@@ -1086,6 +1088,8 @@ public class TaskManagerImpl implements TaskManager {
           .withColor(that.getColor())
           .withNotes(that.getNotes())
           .withWebLink(that.getWebLink())
+          .withEmailNotificationActivated(that.getEmailNotificationActivated())
+          .withEmailNotificationPercentage(that.getEmailNotificationPercentage())
           .withPriority(that.getPriority())
           .withParent(root).build();
 

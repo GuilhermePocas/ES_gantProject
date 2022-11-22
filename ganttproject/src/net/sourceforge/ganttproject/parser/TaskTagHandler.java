@@ -28,6 +28,7 @@ import net.sourceforge.ganttproject.GPLogger;
 import net.sourceforge.ganttproject.gui.TaskTreeUIFacade;
 import net.sourceforge.ganttproject.task.Task;
 import net.sourceforge.ganttproject.task.TaskManager;
+import net.sourceforge.ganttproject.task.EmailScheduler;
 import net.sourceforge.ganttproject.task.TaskManager.TaskBuilder;
 import org.xml.sax.Attributes;
 
@@ -170,6 +171,14 @@ public class TaskTagHandler extends AbstractTagHandler implements ParsingListene
     if (webLink != null) {
       task.setWebLink(webLink);
     }
+
+    int percentage = Integer.parseInt(attrs.getValue("emailNotificationPercentage"));
+    task.setEmailNotificationPercentage(percentage);
+    boolean activated = false;
+    int minPercentage = (int) Math.ceil(task.getEmailScheduler().getMinPercentage());
+    if(minPercentage >= 0 && minPercentage <= percentage) 
+      activated = Boolean.parseBoolean(attrs.getValue("emailNotificationActivated"));
+    task.setEmailNotificationActivated(activated);
 
     String shape = attrs.getValue("shape");
     if (shape != null) {

@@ -188,6 +188,7 @@ public class TaskImpl implements Task {
     myWebLink = copy.myWebLink;
     emailNotificationPercentage = copy.emailNotificationPercentage;
     emailNotificationActivated = copy.emailNotificationActivated;
+    emailScheduler = copy.emailScheduler;
     isMilestone = copy.isMilestone;
     isProjectTask = copy.isProjectTask;
     myPriority = copy.myPriority;
@@ -201,9 +202,6 @@ public class TaskImpl implements Task {
     myColor = copy.myColor;
     myNotes = copy.myNotes;
     bExpand = copy.bExpand;
-    emailNotificationActivated = copy.emailNotificationActivated;
-    emailNotificationPercentage = copy.emailNotificationPercentage;
-    emailScheduler = copy.emailScheduler;
     myCost.setValue(copy.myCost);
 
     myDependencySlice = new TaskDependencySliceImpl(this, myManager.getDependencyCollection(), TaskDependencySlice.COMPLETE_SLICE_FXN);
@@ -908,6 +906,16 @@ public class TaskImpl implements Task {
     }
 
     @Override
+    public void setEmailScheduler(final EmailScheduler scheduler) {
+      myCommands.add(new Runnable() {
+        @Override
+        public void run() {
+          TaskImpl.this.setEmailScheduler(scheduler);
+        }
+      });
+    }
+
+    @Override
     public void setNotes(final String notes) {
       myCommands.add(new Runnable() {
         @Override
@@ -1012,7 +1020,13 @@ public class TaskImpl implements Task {
   @Override
   public void setEmailNotificationPercentage(int percentage) {
     emailNotificationPercentage = percentage;
-    emailScheduler.scheduleEmail();
+      if(getEmailNotificationActivated())
+        emailScheduler.scheduleEmail();
+  }
+
+  @Override
+  public void setEmailScheduler(EmailScheduler scheduler) {
+    emailScheduler = scheduler;
   }
 
   @Override

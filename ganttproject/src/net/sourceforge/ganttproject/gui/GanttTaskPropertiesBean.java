@@ -269,14 +269,16 @@ public class GanttTaskPropertiesBean extends JPanel {
     propertiesPanel.add(weblinkBox);
 
 
-    int minPercentage = selectedTasks[0].getEmailScheduler().getMinPercentage();
+    int minPercentage = (int) Math.ceil(selectedTasks[0].getEmailScheduler().getMinPercentage());
 
     emailCheckbox = new JCheckBox();
 
     if(minPercentage == -1) {
       emailCheckbox.setEnabled(false);
-      minPercentage = 0; // need to reset the value so that slider and spinner look good when disabled
+      minPercentage = 0; // done so that slider and spinner look good even when disabled
     }
+    else
+      emailCheckbox.setEnabled(true);
 
     percentageSlider = new JSlider(JSlider.HORIZONTAL, minPercentage, 100, minPercentage);
     percentageSlider.setMajorTickSpacing(25);
@@ -515,9 +517,16 @@ public class GanttTaskPropertiesBean extends JPanel {
             myTaskColorOption.getValue()));
       }
 
-      mutator.setEmailNotificationActivated(getEmailNotificationActivated());
-      if(getEmailNotificationActivated() && originalEmailNotificationPercentage != getEmailNotificationPercentage())
-        mutator.setEmailNotificationPercentage(getEmailNotificationPercentage());
+      int minPercentage = (int) Math.ceil(selectedTasks[0].getEmailScheduler().getMinPercentage());
+
+      if(minPercentage == -1) {
+        mutator.setEmailNotificationActivated(false);
+        mutator.setEmailNotificationPercentage(0);
+      } else {
+        mutator.setEmailNotificationActivated(getEmailNotificationActivated());
+        if(getEmailNotificationActivated() && originalEmailNotificationPercentage != getEmailNotificationPercentage())
+          mutator.setEmailNotificationPercentage(getEmailNotificationPercentage());
+      }
 
       mutator.commit();
       myDependenciesPanel.commit();
@@ -644,7 +653,7 @@ public class GanttTaskPropertiesBean extends JPanel {
     return myThird;
   }
 
-    private int getEmailNotificationPercentage() {
+  private int getEmailNotificationPercentage() {
     return percentageSlider.getValue();
   }
 

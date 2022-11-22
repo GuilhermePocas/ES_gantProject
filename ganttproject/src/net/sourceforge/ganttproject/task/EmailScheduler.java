@@ -59,9 +59,12 @@ public class EmailScheduler {
         emailSent = false;
 
         long millisUntilSend = sendEpochMilli()-System.currentTimeMillis();
-        // the only way this condition can be met is if the user has had the task properties window open
-        // for so long that the task percentage bounds for email notification are no longer valid
-        if(millisUntilSend <= 0) sendEmail();
+        
+        // this happens if user changes the start or/and end dates of the task
+        if(millisUntilSend < 0) {
+            sendLateEmail();
+            return;
+        }
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -75,6 +78,7 @@ public class EmailScheduler {
     public void recalculateSchedule() {
         if(!emailScheduled || timer == null) return;
         if(!emailSent) cancelScheduledEmail();
+        if(System.currentTimeMillis()>sendEpochMilli()) return;
         scheduleEmail();
     }
 
@@ -85,9 +89,14 @@ public class EmailScheduler {
         emailScheduled = false;
     }
 
-    public void sendEmail() {
-        EmailSender.getInstance().sendEmail(getRecipients(), task.getName(), task.getEmailNotificationPercentage());
+    private void sendEmail() {
+        sendEmail(task.getEmailNotificationPercentage());
+    }
+
+    private void sendEmail(int percentage) {
+        EmailSender.getInstance().sendEmail(getRecipients(), task.getName(), percentage);
         emailSent = true;
+        emailScheduled = false;
     }
 
     private String getRecipients() {
@@ -96,25 +105,46 @@ public class EmailScheduler {
         String recipients = "";
         for(int i = 0; i < myAssignments.length; i++) {
             ResourceAssignment assignment = myAssignments[i];
-            if(assignment.isCoordinator())
-                recipients += assignment.getResource().getMail()+",";
+            if(assignment.isCoordinator()) {
+                String mail = assignment.getResource().getMail();
+                if(!mail.isEmpty())
+                    recipients += mail+",";
+            }
         }
-        return recipients.substring(0, recipients.length()-1);
+        if(!recipients.isEmpty()) 
+            recipients = recipients.substring(0, recipients.length()-1);
+        return recipients;
     }
 
-    public int getMinPercentage() {
+    public double getMinPercentage() {
         long startEpochMilli = startEpochMilli();
         long endEpochMilli = endEpochMilli();
-        System.out.printf("%d %d %d\n", startEpochMilli, endEpochMilli, System.currentTimeMillis());
 
-        if(System.currentTimeMillis() <= startEpochMilli) return 100;
+        if(System.currentTimeMillis() <= startEpochMilli) return 0;
         if(System.currentTimeMillis() >= endEpochMilli) return -1;
 
         long taskTotalDurationMilli = endEpochMilli-startEpochMilli;
         long taskRemainingDurationMilli = endEpochMilli-System.currentTimeMillis();
 
         double minPercentageDecimal = 1-((double)taskRemainingDurationMilli)/((double)taskTotalDurationMilli);
-        int minPercentage = (int) Math.ceil(minPercentageDecimal*100);
-        return minPercentage;
+        return minPercentageDecimal*100;
+    }
+
+    public boolean emailHasBeenSent() {
+        return emailSent;
+    }
+
+    // this method needs a small delay because when opening a project and importing tasks
+    // the email scheduler is created before the assigned people are loaded
+    // this lets the program load the assigned people before sending the email
+    public void sendLateEmail() {
+        Timer lateMailTimer = new Timer();
+        lateMailTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                int newPercentage = (int) Math.floor(getMinPercentage());
+                sendEmail(newPercentage);
+            }
+        }, 1000);   
     }
 }

@@ -92,6 +92,8 @@ class TaskSaver extends SaverBase {
     if (sWebLink != null && !sWebLink.equals("") && !sWebLink.equals("http://")) {
       addAttribute("webLink", URLEncoder.encode(sWebLink, Charsets.UTF_8.name()), attrs);
     }
+    addAttribute("emailNotificationActivated", Boolean.toString(task.getEmailNotificationActivated()), attrs);
+    addAttribute("emailNotificationPercentage", String.valueOf(task.getEmailNotificationPercentage()), attrs);
     addAttribute("expand", String.valueOf(task.getExpand()), attrs);
 
     if (!(task.getCost().isCalculated() && task.getCost().getManualValue().equals(BigDecimal.ZERO))) {

@@ -23,6 +23,8 @@ import java.awt.Color;
 import biz.ganttproject.core.chart.render.ShapePaint;
 import biz.ganttproject.core.time.GanttCalendar;
 import biz.ganttproject.core.time.TimeDuration;
+import net.sourceforge.ganttproject.task.EmailScheduler;
+
 
 
 /**
@@ -59,6 +61,8 @@ public interface MutableTask {
   void setEmailNotificationPercentage(int percentage);
 
   void setEmailNotificationActivated(boolean selected);
+
+  void setEmailScheduler(EmailScheduler scheduler);
 
   void setNotes(String notes);
 

@@ -60,6 +60,8 @@ public interface TaskManager {
     Date myEndDate;
     String myNotes;
     String myWebLink;
+    boolean emailNotificationActivated;
+    int emailNotificationPercentage;
     Integer myCompletion;
     Priority myPriority;
     Task myPrototype;
@@ -136,6 +138,16 @@ public interface TaskManager {
 
     public TaskBuilder withWebLink(String value) {
       myWebLink = value;
+      return this;
+    }
+
+    public TaskBuilder withEmailNotificationActivated(boolean activated) {
+      emailNotificationActivated = activated;
+      return this;
+    }
+
+    public TaskBuilder withEmailNotificationPercentage(int percentage) {
+      emailNotificationPercentage = percentage;
       return this;
     }
 
