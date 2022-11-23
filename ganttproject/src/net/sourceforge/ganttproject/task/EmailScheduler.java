@@ -12,6 +12,9 @@ import java.time.ZoneId;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class EmailScheduler {
 
     private Task task;
@@ -144,8 +147,11 @@ public class EmailScheduler {
             public void run() {
                 int newPercentage = (int) Math.floor(getMinPercentage());
                 if(newPercentage == -1) newPercentage = 100;
-                sendEmail(newPercentage);
+                sendEmail(newPercentage);                
             }
         }, 1000);   
+
+        JOptionPane.showMessageDialog(new JFrame(), 
+        "Task's "+task.getName()+" email notification percentage was exceeded. A late email was sent.");
     }
 }
