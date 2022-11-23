@@ -108,6 +108,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int col) {
         if(myTask.isSupertask())
             throw new SuperTaskObjectiveException();
+        if(myTask.isMilestone())
+            throw new MilestoneObjectiveException();
         if (row >= 0) {
             if (row >= myObjectives.size()) {
                 createObjective(value, col);
