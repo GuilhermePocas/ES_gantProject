@@ -96,8 +96,8 @@ class MouseMotionListenerImpl extends MouseMotionListenerBase {
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
       TaskObjectiveCollection objCole = taskUnderPoint.getObjectivesCollection();
       String textObjectives = "";
-      for(int i = 0; i < objCole.size(); i++){
-        textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n") ;
+      for(int i = 0; i < objCole.size(); i++) {
+        textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
       }
 
       myChartController.showTooltip(e.getX(), e.getY()
