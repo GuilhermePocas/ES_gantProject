@@ -95,6 +95,7 @@ public class EmailScheduler {
 
     private void sendEmail(int percentage) {
         EmailSender.getInstance().sendEmail(getRecipients(), task.getName(), percentage);
+        task.setEmailNotificationActivated(false);
         emailSent = true;
         emailScheduled = false;
     }
