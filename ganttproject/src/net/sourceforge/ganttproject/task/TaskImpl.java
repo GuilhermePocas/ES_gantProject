@@ -510,6 +510,7 @@ public class TaskImpl implements Task {
     return myObjectives;
   }
 
+
   @Override
   public Task getSupertask() {
     TaskHierarchyItem container = myTaskHierarchyItem.getContainerItem();

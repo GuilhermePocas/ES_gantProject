@@ -29,15 +29,12 @@ import biz.ganttproject.core.time.CalendarFactory;
 import net.sourceforge.ganttproject.ChartComponentBase;
 import net.sourceforge.ganttproject.GanttGraphicArea;
 import net.sourceforge.ganttproject.chart.ChartModelImpl;
-import net.sourceforge.ganttproject.chart.item.CalendarChartItem;
-import net.sourceforge.ganttproject.chart.item.ChartItem;
-import net.sourceforge.ganttproject.chart.item.TaskBoundaryChartItem;
-import net.sourceforge.ganttproject.chart.item.TaskNotesChartItem;
-import net.sourceforge.ganttproject.chart.item.TaskProgressChartItem;
+import net.sourceforge.ganttproject.chart.item.*;
 import net.sourceforge.ganttproject.chart.mouse.MouseMotionListenerBase;
 import net.sourceforge.ganttproject.gui.UIFacade;
 import net.sourceforge.ganttproject.language.GanttLanguage;
 import net.sourceforge.ganttproject.task.Task;
+import net.sourceforge.ganttproject.task.TaskObjectiveCollection;
 
 class MouseMotionListenerImpl extends MouseMotionListenerBase {
   private final ChartComponentBase myChartComponent;
@@ -93,7 +90,19 @@ class MouseMotionListenerImpl extends MouseMotionListenerBase {
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
       myChartController.showTooltip(e.getX(), e.getY(),
           GanttLanguage.getInstance().formatText(
-              "task.notesTooltip.pattern", taskUnderPoint.getNotes().replace("\n", "<br>")));
+              "task.notesTooltip.pattern",taskUnderPoint.getNotes().replace("\n", "<br>")));
+    }
+    else if(itemUnderPoint instanceof TaskRegularAreaChartItem && taskUnderPoint.getObjectivesCollection().size()!=0){
+      myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
+      TaskObjectiveCollection objCole = taskUnderPoint.getObjectivesCollection();
+      String textObjectives = "";
+      for(int i = 0; i < objCole.size(); i++){
+        textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n") ;
+      }
+
+      myChartController.showTooltip(e.getX(), e.getY()
+              ,GanttLanguage.getInstance().formatText(
+                      "task.objectivesTooltip.pattern", textObjectives.replace("\n", "<br>")));
     }
     else {
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
