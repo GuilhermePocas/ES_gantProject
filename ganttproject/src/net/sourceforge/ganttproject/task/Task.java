@@ -198,4 +198,6 @@ public interface Task extends MutableTask {
   int getEmailNotificationPercentage();
 
   EmailScheduler getEmailScheduler();
+
+  void addObjective(TaskObjective obj);
 }

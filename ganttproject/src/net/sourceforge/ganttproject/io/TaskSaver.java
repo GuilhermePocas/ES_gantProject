@@ -26,6 +26,8 @@ import net.sourceforge.ganttproject.GanttTask;
 import net.sourceforge.ganttproject.IGanttProject;
 import net.sourceforge.ganttproject.task.CustomColumnsValues;
 import net.sourceforge.ganttproject.task.Task;
+import net.sourceforge.ganttproject.task.TaskObjective;
+import net.sourceforge.ganttproject.task.TaskObjectiveCollection;
 import net.sourceforge.ganttproject.task.dependency.TaskDependency;
 import net.sourceforge.ganttproject.util.ColorConvertion;
 import org.w3c.util.DateParser;
@@ -130,6 +132,18 @@ class TaskSaver extends SaverBase {
         emptyElement("customproperty", attrs, handler);
       }
     }
+
+    TaskObjectiveCollection objs = task.getObjectivesCollection();
+    startElement("objectives", attrs, handler);
+    for(TaskObjective ob : objs.getObjectivesList()) {
+      addAttribute("id", ob.getId(), attrs);
+      addAttribute("name", ob.getName(), attrs);
+      addAttribute("percentage", ob.getPercentage(), attrs);
+      addAttribute("cheked", ob.isChecked(), attrs);
+      emptyElement("objective", attrs, handler);
+    }
+    endElement("objectives", handler);
+
 
     // Write the child of the task
     if (task.getManager().getTaskHierarchy().hasNestedTasks(task)) {
