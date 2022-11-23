@@ -62,7 +62,6 @@ public class EmailScheduler {
         emailSent = false;
 
         long millisUntilSend = sendEpochMilli()-System.currentTimeMillis();
-        System.out.println(millisUntilSend);
         
         // this happens if user changes the start or/and end dates of the task
         if(millisUntilSend < 0) {
