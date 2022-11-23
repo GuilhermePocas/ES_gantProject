@@ -423,6 +423,11 @@ public class GanttTaskPropertiesBean extends JPanel {
         super.addTab(title, icon, UIUtil.contentPaneBorder((JComponent)component));
       }
     };
+
+    if(selectedTasks[0].getEmailScheduler().emailHasBeenSent()) {
+      originalEmailNotificationActivated = false;
+    }
+
     constructGeneralPanel();
 
     tabbedPane.addTab(language.getText("general"), new ImageIcon(getClass().getResource("/icons/properties_16.gif")),

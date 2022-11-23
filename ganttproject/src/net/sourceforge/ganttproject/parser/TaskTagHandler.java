@@ -172,13 +172,20 @@ public class TaskTagHandler extends AbstractTagHandler implements ParsingListene
       task.setWebLink(webLink);
     }
 
-    int percentage = Integer.parseInt(attrs.getValue("emailNotificationPercentage"));
-    task.setEmailNotificationPercentage(percentage);
+    
     boolean activated = false;
+    int percentage = Integer.parseInt(attrs.getValue("emailNotificationPercentage"));
+
     int minPercentage = (int) Math.ceil(task.getEmailScheduler().getMinPercentage());
-    if(minPercentage >= 0 && minPercentage <= percentage) 
+    if(minPercentage != -1 && minPercentage <= percentage)
       activated = Boolean.parseBoolean(attrs.getValue("emailNotificationActivated"));
+    else {
+      percentage = Math.max(minPercentage, 0);
+      task.getEmailScheduler().sendLateEmail();
+    }
+
     task.setEmailNotificationActivated(activated);
+    task.setEmailNotificationPercentage(percentage);
 
     String shape = attrs.getValue("shape");
     if (shape != null) {

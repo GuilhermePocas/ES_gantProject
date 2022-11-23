@@ -59,6 +59,7 @@ public class EmailScheduler {
         emailSent = false;
 
         long millisUntilSend = sendEpochMilli()-System.currentTimeMillis();
+        System.out.println(millisUntilSend);
         
         // this happens if user changes the start or/and end dates of the task
         if(millisUntilSend < 0) {
@@ -78,7 +79,6 @@ public class EmailScheduler {
     public void recalculateSchedule() {
         if(!emailScheduled || timer == null) return;
         if(!emailSent) cancelScheduledEmail();
-        if(System.currentTimeMillis()>sendEpochMilli()) return;
         scheduleEmail();
     }
 
@@ -95,7 +95,6 @@ public class EmailScheduler {
 
     private void sendEmail(int percentage) {
         EmailSender.getInstance().sendEmail(getRecipients(), task.getName(), percentage);
-        task.setEmailNotificationActivated(false);
         emailSent = true;
         emailScheduled = false;
     }
@@ -144,6 +143,7 @@ public class EmailScheduler {
             @Override
             public void run() {
                 int newPercentage = (int) Math.floor(getMinPercentage());
+                if(newPercentage == -1) newPercentage = 100;
                 sendEmail(newPercentage);
             }
         }, 1000);   
