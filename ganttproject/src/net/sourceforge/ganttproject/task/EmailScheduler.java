@@ -151,6 +151,6 @@ public class EmailScheduler {
         }, 1000);   
 
         JOptionPane.showMessageDialog(new JFrame(), 
-        "Task's "+task.getName()+" email notification percentage was exceeded. A late email was sent.");
+        "Task "+task.getName()+"'s email notification percentage was exceeded.\nA late email was sent to all its coordinators.");
     }
 }

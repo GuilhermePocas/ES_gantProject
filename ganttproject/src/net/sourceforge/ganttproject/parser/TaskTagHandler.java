@@ -181,7 +181,8 @@ public class TaskTagHandler extends AbstractTagHandler implements ParsingListene
       activated = Boolean.parseBoolean(attrs.getValue("emailNotificationActivated"));
     else {
       percentage = Math.max(minPercentage, 0);
-      task.getEmailScheduler().sendLateEmail();
+      if(activated)
+        task.getEmailScheduler().sendLateEmail();
     }
 
     task.setEmailNotificationActivated(activated);
