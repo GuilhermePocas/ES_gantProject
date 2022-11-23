@@ -38,12 +38,15 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private final Task myTask;
 
+    private int totalPercentage;
+
 
     private boolean isChanged = false;
 
     public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
         this.myObjectives = myObjectivesCol;
         myTask = myObjectivesCol.getTask();
+        totalPercentage = 0;
     }
 
     @Override
@@ -110,18 +113,21 @@ public class ObjectivesTableModel extends AbstractTableModel {
             throw new SuperTaskObjectiveException();
         if(myTask.isMilestone())
             throw new MilestoneObjectiveException();
+
         if (row >= 0) {
             if (row >= myObjectives.size()) {
-                createObjective(value, col);
+                if(totalPercentage < 100)
+                    createObjective(value, col);
             } else {
                 updateObjective(value, row, col);
             }
+
             if(col == 3) {
                 int percentage = myTask.getCompletionPercentage();
                 if((boolean) value)
-                    myTask.setCompletionPercentage(percentage + Integer.parseInt((String)getValueAt(row, 2)));
+                    myTask.setCompletionPercentage(totalPercentage + Integer.parseInt((String)getValueAt(row, 2)));
                 else
-                    myTask.setCompletionPercentage(percentage - Integer.parseInt((String) getValueAt(row, 2)));
+                    myTask.setCompletionPercentage(totalPercentage - Integer.parseInt((String) getValueAt(row, 2)));
             }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
@@ -137,20 +143,20 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 break;
             }
             case 2: {
+                int oldPercentage = updateTarget.getPercentage();
+                addPercentage(-oldPercentage);
+
                 int loadAsInt = Integer.parseInt(String.valueOf(value));
-                if(myObjectives.reachedTheMaximum()) {
-                    updateTarget.setPercentage(0);
-                    throw new Over100Exception();
-                }else if(loadAsInt + myObjectives.getTotalPercentage() > 100){
-                    updateTarget.setPercentage(100 - myObjectives.getTotalPercentage());
-                    throw new Over100Exception();
-                } else {
-                    updateTarget.setPercentage(loadAsInt);
-                }
+                int percentage = addPercentage(loadAsInt);
+                updateTarget.setPercentage(percentage);
                 break;
             }
             case 1: {
-                updateTarget.setName(String.valueOf(value));
+                String name = String.valueOf(value);
+                if(!name.equals(""))
+                    updateTarget.setName(name);
+                else
+                    updateTarget.setName("Objective " + (updateTarget.getId()+1));
                 break;
             }
             case 0: {
@@ -168,29 +174,19 @@ public class ObjectivesTableModel extends AbstractTableModel {
     private void createObjective(Object value, int col) {
 
         int id = 0;
-        if (getMyObjectives() == null){
-            id = 0;
-        }
-        else
+        if (getMyObjectives() != null)
             id = myObjectives.size();
         String name = "Objective " + (id+1);
         int percentage = 0;
         boolean isChecked = false;
         switch (col) {
             case 1:
-                name = (String) value;
+                if(!value.equals(""))
+                    name = (String) value;
                 break;
             case 2:
                 int perc = Integer.parseInt((String) value);
-                if(myObjectives.reachedTheMaximum()) {
-                    percentage = 0;
-                    throw new Over100Exception();
-                }else if(perc + myObjectives.getTotalPercentage() > 100){
-                    percentage = 100 - myObjectives.getTotalPercentage();
-                    throw new Over100Exception();
-                } else{
-                    percentage = perc;
-                }
+                percentage = addPercentage(perc);
                 break;
             case 3:
                 isChecked = (boolean) value;
@@ -230,6 +226,19 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     public void clear() {
         myObjectives.clear();
+    }
+
+    public int addPercentage(int num) {
+        int sum = totalPercentage+num;
+        if(sum<0)
+            return 0;
+        if(sum <= 100) {
+            totalPercentage+=num;
+            return num;
+        }
+        int maxPossible = 100 - totalPercentage;
+        totalPercentage = 100;
+        return maxPossible;
     }
 
 }
