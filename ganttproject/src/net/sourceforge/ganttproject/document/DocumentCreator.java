@@ -106,7 +106,7 @@ public class DocumentCreator implements DocumentManager {
    * @param pass
    *          password
    * @return an implementation of the interface Document
-   * @throws an
+   * @throws
    *           Exception when the specified protocol is not supported
    */
   private Document createDocument(String path, String user, String pass) {

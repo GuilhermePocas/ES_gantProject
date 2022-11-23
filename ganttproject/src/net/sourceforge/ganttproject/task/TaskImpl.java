@@ -1365,4 +1365,8 @@ public class TaskImpl implements Task {
   public Cost getCost() {
     return myCost;
   }
+
+  public void addObjective(TaskObjective obj) {
+    myObjectives.add(obj);
+  }
 }
