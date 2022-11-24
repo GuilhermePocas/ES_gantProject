@@ -60,6 +60,10 @@ public interface MutableTask {
 
   void setEmailNotificationPercentage(int percentage);
 
+  int getMinPercentage();
+
+  void setMinPercentage(int percentage);
+
   void setEmailNotificationActivated(boolean selected);
 
   void setEmailScheduler(EmailScheduler scheduler);

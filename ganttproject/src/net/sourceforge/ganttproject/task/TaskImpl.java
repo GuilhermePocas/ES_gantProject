@@ -79,6 +79,8 @@ public class TaskImpl implements Task {
 
   private String myName;
 
+  private int minPercentage = 0;
+
   private String myWebLink = "";
 
   private boolean emailNotificationActivated = false;
@@ -839,11 +841,13 @@ public class TaskImpl implements Task {
 
     @Override
     public void setCompletionPercentage(final int percentage) {
-      if (myCompletionPercentageChange == null) {
-        myCompletionPercentageChange = new FieldChange();
-        myCompletionPercentageChange.myEventSender = myProgressEventSender;
+      if (percentage >= minPercentage) {
+        if (myCompletionPercentageChange == null) {
+          myCompletionPercentageChange = new FieldChange();
+          myCompletionPercentageChange.myEventSender = myProgressEventSender;
+        }
+        myCompletionPercentageChange.setValue(new Integer(percentage));
       }
-      myCompletionPercentageChange.setValue(new Integer(percentage));
     }
 
     @Override
@@ -884,6 +888,14 @@ public class TaskImpl implements Task {
           TaskImpl.this.setWebLink(webLink);
         }
       });
+    }
+
+    public int getMinPercentage() {
+      return minPercentage;
+    }
+
+    public void setMinPercentage(int percentage) {
+      minPercentage = percentage;
     }
 
     @Override
@@ -1023,6 +1035,16 @@ public class TaskImpl implements Task {
     emailNotificationPercentage = percentage;
       if(getEmailNotificationActivated())
         emailScheduler.scheduleEmail();
+  }
+
+  @Override
+  public int getMinPercentage() {
+    return minPercentage;
+  }
+
+  @Override
+  public void setMinPercentage(int percentage) {
+        minPercentage = percentage;
   }
 
   @Override
@@ -1199,11 +1221,13 @@ public class TaskImpl implements Task {
 
   @Override
   public void setCompletionPercentage(int percentage) {
-    if (percentage != myCompletionPercentage) {
-      myCompletionPercentage = percentage;
-      EventSender progressEventSender = new ProgressEventSender();
-      progressEventSender.enable();
-      progressEventSender.fireEvent();
+    if(percentage >= minPercentage) {
+      if (percentage != myCompletionPercentage) {
+        myCompletionPercentage = percentage;
+        EventSender progressEventSender = new ProgressEventSender();
+        progressEventSender.enable();
+        progressEventSender.fireEvent();
+      }
     }
   }
 
@@ -1321,7 +1345,6 @@ public class TaskImpl implements Task {
   public void setProjectTask(boolean projectTask) {
     isProjectTask = projectTask;
   }
-
   private class CostImpl implements Cost {
     private BigDecimal myValue = BigDecimal.ZERO;
     private boolean isCalculated = true;
