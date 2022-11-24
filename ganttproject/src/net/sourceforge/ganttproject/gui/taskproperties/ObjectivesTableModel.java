@@ -34,7 +34,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    private TaskObjectiveCollection myObjectivesCommitted;
+    //private TaskObjectiveCollection myObjectivesCommitted;
 
     private TaskObjectiveCollection myObjectives;
 
@@ -46,7 +46,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
         this.myObjectives = myObjectivesCol;
-        this.myObjectivesCommitted = myObjectivesCol;
+        //this.myObjectivesCommitted = myObjectivesCol;
         myTask = myObjectivesCol.getTask();
     }
 
@@ -117,14 +117,15 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
         if (row >= 0) {
             if (row >= myObjectives.size()) {
-                if(myObjectives.getTotalPercentage() < 100)
-                    createObjective(value, col);
+                createObjective(value, col);
             } else {
                 updateObjective(value, row, col);
             }
 
             if(col == 3) {
-                myObjectives.get(row).check((boolean)value);
+                int checkedPercentage = myObjectives.getCheckedPercentage();
+                myTask.setMinPercentage(checkedPercentage);
+                myTask.setCompletionPercentage(checkedPercentage);
             }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
@@ -134,21 +135,17 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private void updateObjective(Object value, int row, int col) {
         TaskObjective updateTarget = myObjectives.get(row);
-        myObjectives.remove(updateTarget);
         switch (col) {
             case 3: {
-                updateTarget.check(((Boolean) value).booleanValue());
+                updateTarget.check((Boolean) value);
                 if(updateTarget.isChecked())
                     myTask.setMinPercentage(updateTarget.getPercentage());
                 break;
             }
             case 2: {
-                int oldPercentage = updateTarget.getPercentage();
-                addPercentage(-oldPercentage);
-
                 int loadAsInt = Integer.parseInt(String.valueOf(value));
-                int percentage = addPercentage(loadAsInt);
-                updateTarget.setPercentage(percentage);
+                int leftOver = myObjectives.getLeftOver();
+                updateTarget.setPercentage(Math.min(leftOver, loadAsInt));
                 break;
             }
             case 1: {
@@ -169,7 +166,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
             default:
                 break;
         }
-        myObjectives.add(updateTarget);
     }
 
     private void createObjective(Object value, int col) {
@@ -186,8 +182,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
                     name = (String) value;
                 break;
             case 2:
-                int perc = Integer.parseInt((String) value);
-                percentage = addPercentage(perc);
+                percentage = Integer.parseInt((String) value);
                 break;
             case 3:
                 isChecked = (boolean) value;
@@ -229,7 +224,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         myObjectives.clear();
     }
 
-    public void reset() {
+    /*public void reset() {
         myObjectives = new TaskObjectiveCollectionImpl(myObjectivesCommitted);
     }
 
@@ -238,20 +233,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         int checkedPercentage = myObjectives.getCheckedPercentage();
         myTask.setMinPercentage(checkedPercentage);
         myTask.setCompletionPercentage(checkedPercentage);
-    }
+    }*/
 
-    private int addPercentage(int num) {
-        int totalPercentage = myObjectives.getTotalPercentage();
-        int sum = totalPercentage+num;
-        if(sum<0)
-            return 0;
-        if(sum <= 100) {
-            totalPercentage+=num;
-            return num;
-        }
-        int maxPossible = 100 - totalPercentage;
-        totalPercentage = 100;
-        return maxPossible;
-    }
 
 }

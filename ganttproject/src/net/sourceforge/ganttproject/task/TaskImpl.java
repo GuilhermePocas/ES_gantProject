@@ -706,6 +706,8 @@ public class TaskImpl implements Task {
         }
         myManager.fireTaskScheduleChanged(TaskImpl.this, oldStart, oldEnd);
       }
+
+
     }
 
     public GanttCalendar getThird() {

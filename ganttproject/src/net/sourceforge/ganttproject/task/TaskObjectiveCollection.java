@@ -31,4 +31,7 @@ public interface TaskObjectiveCollection {
     void clear();
 
     int getCheckedPercentage();
+
+    int getLeftOver();
+
 }

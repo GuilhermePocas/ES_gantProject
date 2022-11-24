@@ -13,8 +13,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     private final Task myTask;
 
-    private int totalPercentage;
-
     private static int MAX = 100;
 
     public TaskObjectiveCollectionImpl(Task myTask) {
@@ -24,7 +22,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
         myObjectives = taskCol.getObjectivesList();
-        totalPercentage = taskCol.getTotalPercentage();
         this.myTask = taskCol.getTask();
     }
 
@@ -39,10 +36,12 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     @Override
     public void add(TaskObjective objective) {
-        myObjectives.add(objective);
-        totalPercentage += objective.getPercentage();
+        if(getTotalPercentage() != MAX) {
+            int newPercentage = Math.min(getLeftOver(), objective.getPercentage());
+            objective.setPercentage(newPercentage);
+            myObjectives.add(objective);
+        }
     }
-
 
     @Override
     public Task getTask() {
@@ -59,7 +58,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     }
     @Override
     public void remove(TaskObjective obj){// index == row-1
-        totalPercentage-= obj.getPercentage();
         myObjectives.remove(obj);
     }
 
@@ -74,19 +72,21 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     }
 
     @Override
-    public int getTotalPercentage(){
-        return totalPercentage;
-    }
-
-    @Override
     public boolean reachedTheMaximum(){
-        return totalPercentage >= MAX;
+        return getTotalPercentage() >= MAX;
     }
 
     public void clear() {
         myObjectives.clear();
-        totalPercentage = 0;
         myTask.setCompletionPercentage(0);
+    }
+
+    public int getTotalPercentage() {
+        int TotalPercentage = 0;
+        for(TaskObjective obj : myObjectives) {
+            TotalPercentage+=obj.getPercentage();
+        }
+        return TotalPercentage;
     }
 
     public int getCheckedPercentage() {
@@ -98,4 +98,7 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return checkedPercentage;
     }
 
+    public int getLeftOver() {
+        return MAX - getTotalPercentage();
+    }
 }

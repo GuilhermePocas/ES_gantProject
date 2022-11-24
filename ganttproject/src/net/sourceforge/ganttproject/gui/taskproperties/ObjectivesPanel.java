@@ -87,12 +87,12 @@ public class ObjectivesPanel {
 
     }
 
-    public void commit() {
+/*    public void commit() {
         if (myTable.isEditing()) {
             myTable.getCellEditor().stopCellEditing();
         }
         myModel.commit();
     }
-
+*/
 
 }
