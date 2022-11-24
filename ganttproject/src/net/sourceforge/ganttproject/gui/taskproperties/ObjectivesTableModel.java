@@ -125,9 +125,9 @@ public class ObjectivesTableModel extends AbstractTableModel {
             if(col == 3) {
                 int percentage = myTask.getCompletionPercentage();
                 if((boolean) value)
-                    myTask.setCompletionPercentage(totalPercentage + Integer.parseInt((String)getValueAt(row, 2)));
+                    myTask.setCompletionPercentage(totalPercentage);
                 else
-                    myTask.setCompletionPercentage(totalPercentage - Integer.parseInt((String) getValueAt(row, 2)));
+                    myTask.setCompletionPercentage(totalPercentage);
             }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
