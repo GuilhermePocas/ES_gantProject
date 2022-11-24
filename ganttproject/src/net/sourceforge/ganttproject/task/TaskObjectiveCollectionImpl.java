@@ -21,7 +21,8 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     }
 
     public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
-        myObjectives = taskCol.getObjectivesList();
+        myObjectives = new ArrayList<>();
+        myObjectives.addAll(taskCol.getObjectivesList());
         this.myTask = taskCol.getTask();
     }
 
@@ -78,7 +79,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     public void clear() {
         myObjectives.clear();
-        myTask.setCompletionPercentage(0);
     }
 
     public int getTotalPercentage() {
@@ -100,5 +100,15 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     public int getLeftOver() {
         return MAX - getTotalPercentage();
+    }
+
+    public void copy(TaskObjectiveCollection list) {
+        clear();
+        if(list != null) {
+            for(TaskObjective obj : list.getObjectivesList()) {
+                if(obj.getName() != null)
+                    myObjectives.add(obj);
+            }
+        }
     }
 }

@@ -34,9 +34,9 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    //private TaskObjectiveCollection myObjectivesCommitted;
+    private TaskObjectiveCollection myObjectivesCommitted;
 
-    private TaskObjectiveCollection myObjectives;
+    private TaskObjectiveCollection myObjectivesBuffer;
 
     private final Task myTask;
 
@@ -45,8 +45,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
 
     public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
-        this.myObjectives = myObjectivesCol;
-        //this.myObjectivesCommitted = myObjectivesCol;
+        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCol);
+        this.myObjectivesCommitted = myObjectivesCol;
         myTask = myObjectivesCol.getTask();
     }
 
@@ -62,7 +62,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return myObjectives.size() + 1;
+        return myObjectivesCommitted.size() + myObjectivesBuffer.size() + 1;
     }
 
     @Override
@@ -74,8 +74,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) {
         Object result;
         if (row >= 0) {
-            if (row < myObjectives.size()) {
-                TaskObjective objective = myObjectives.get(row);
+            if (row < myObjectivesBuffer.size()) {
+                TaskObjective objective = myObjectivesBuffer.get(row);
                 switch (col) {
                     case 0:
                         result = String.valueOf(objective.getId());
@@ -116,16 +116,14 @@ public class ObjectivesTableModel extends AbstractTableModel {
             throw new MilestoneObjectiveException();
 
         if (row >= 0) {
-            if (row >= myObjectives.size()) {
+            if (row >= myObjectivesBuffer.size()) {
                 createObjective(value, col);
             } else {
                 updateObjective(value, row, col);
             }
 
             if(col == 3) {
-                int checkedPercentage = myObjectives.getCheckedPercentage();
-                myTask.setMinPercentage(checkedPercentage);
-                myTask.setCompletionPercentage(checkedPercentage);
+                updateTask();
             }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
@@ -134,7 +132,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     private void updateObjective(Object value, int row, int col) {
-        TaskObjective updateTarget = myObjectives.get(row);
+        TaskObjective updateTarget = myObjectivesBuffer.get(row);
         switch (col) {
             case 3: {
                 updateTarget.check((Boolean) value);
@@ -144,7 +142,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
             }
             case 2: {
                 int loadAsInt = Integer.parseInt(String.valueOf(value));
-                int leftOver = myObjectives.getLeftOver();
+                int leftOver = myObjectivesBuffer.getLeftOver();
                 updateTarget.setPercentage(Math.min(leftOver, loadAsInt));
                 break;
             }
@@ -156,13 +154,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
                     updateTarget.setName("Objective " + (updateTarget.getId()+1));
                 break;
             }
-/*            case 0: {
-                if (value == null) {
-                    myObjectives.removeIndex(row);
-                    fireTableRowsDeleted(row, row);
-                }
-                break;
-            }*/
             default:
                 break;
         }
@@ -172,7 +163,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
         int id = 0;
         if (getMyObjectives() != null)
-            id = myObjectives.size();
+            id = myObjectivesBuffer.size();
         String name = "Objective " + (id+1);
         int percentage = 0;
         boolean isChecked = false;
@@ -197,12 +188,12 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
 
         TaskObjective newObjective = new TaskObjectiveImpl(id, name , percentage, isChecked);
-        myObjectives.add(newObjective);
-        fireTableRowsInserted(myObjectives.size(), myObjectives.size());
+        myObjectivesBuffer.add(newObjective);
+        fireTableRowsInserted(myObjectivesBuffer.size(), myObjectivesBuffer.size());
     }
 
     public List<TaskObjective> getMyObjectives() {
-        return Collections.unmodifiableList(myObjectives.getObjectivesList());
+        return Collections.unmodifiableList(myObjectivesCommitted.getObjectivesList());
     }
 
     public boolean isChanged() {
@@ -212,28 +203,35 @@ public class ObjectivesTableModel extends AbstractTableModel {
     public void delete(int[] selectedRows) {
         List<TaskObjective> selected = new ArrayList<>();
         for (int row : selectedRows) {
-            if (row < myObjectives.size()) {
-                selected.add(myObjectives.get(row));
+            if (row < myObjectivesBuffer.size()) {
+                selected.add(myObjectivesBuffer.get(row));
             }
         }
-        myObjectives.removeAll(selected);
+
+        myObjectivesBuffer.removeAll(selected);
         fireTableDataChanged();
+        updateTask();
+
+        /*int checkedPercentage = myObjectives.getCheckedPercentage();
+        myTask.setMinPercentage(checkedPercentage);
+        myTask.setCompletionPercentage(checkedPercentage);*/
     }
 
     public void clear() {
-        myObjectives.clear();
-    }
-
-    /*public void reset() {
-        myObjectives = new TaskObjectiveCollectionImpl(myObjectivesCommitted);
+        myObjectivesBuffer.clear();
     }
 
     public void commit() {
-        myObjectivesCommitted = new TaskObjectiveCollectionImpl(myObjectives);
-        int checkedPercentage = myObjectives.getCheckedPercentage();
+        myObjectivesCommitted.copy(myObjectivesBuffer);
+        myObjectivesBuffer.clear();
+        fireTableDataChanged();
+        throw new RuntimeException(myObjectivesBuffer.size() + "" + myObjectivesCommitted.size());
+    }
+
+    private void updateTask() {
+        int checkedPercentage = myObjectivesCommitted.getCheckedPercentage();
         myTask.setMinPercentage(checkedPercentage);
         myTask.setCompletionPercentage(checkedPercentage);
-    }*/
-
+    }
 
 }

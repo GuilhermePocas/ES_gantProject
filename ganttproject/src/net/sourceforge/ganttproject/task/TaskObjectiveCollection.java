@@ -34,4 +34,6 @@ public interface TaskObjectiveCollection {
 
     int getLeftOver();
 
+    void copy(TaskObjectiveCollection list);
+
 }
