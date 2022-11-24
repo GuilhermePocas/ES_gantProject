@@ -34,13 +34,11 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    private final TaskObjectiveCollection myObjectives;
+    private TaskObjectiveCollection myObjectivesCommitted;
+
+    private TaskObjectiveCollection myObjectives;
 
     private final Task myTask;
-
-    private int totalPercentage;
-
-    private int chekedPercentage = 0;
 
     private boolean isChanged = false;
 
@@ -48,8 +46,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
         this.myObjectives = myObjectivesCol;
+        this.myObjectivesCommitted = myObjectivesCol;
         myTask = myObjectivesCol.getTask();
-        totalPercentage = 0;
     }
 
     @Override
@@ -119,21 +117,14 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
         if (row >= 0) {
             if (row >= myObjectives.size()) {
-                if(totalPercentage < 100)
+                if(myObjectives.getTotalPercentage() < 100)
                     createObjective(value, col);
             } else {
                 updateObjective(value, row, col);
             }
 
             if(col == 3) {
-                int percentage = Integer.parseInt((String)getValueAt(row,2));
-                if((boolean) value) {
-                    chekedPercentage+=percentage;
-                }else {
-                    chekedPercentage-=percentage;
-                }
-                myTask.setMinPercentage(chekedPercentage);
-                myTask.setCompletionPercentage(chekedPercentage);
+                myObjectives.get(row).check((boolean)value);
             }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
@@ -143,6 +134,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private void updateObjective(Object value, int row, int col) {
         TaskObjective updateTarget = myObjectives.get(row);
+        myObjectives.remove(updateTarget);
         switch (col) {
             case 3: {
                 updateTarget.check(((Boolean) value).booleanValue());
@@ -167,16 +159,17 @@ public class ObjectivesTableModel extends AbstractTableModel {
                     updateTarget.setName("Objective " + (updateTarget.getId()+1));
                 break;
             }
-            case 0: {
+/*            case 0: {
                 if (value == null) {
                     myObjectives.removeIndex(row);
                     fireTableRowsDeleted(row, row);
                 }
                 break;
-            }
+            }*/
             default:
                 break;
         }
+        myObjectives.add(updateTarget);
     }
 
     private void createObjective(Object value, int col) {
@@ -236,7 +229,19 @@ public class ObjectivesTableModel extends AbstractTableModel {
         myObjectives.clear();
     }
 
-    public int addPercentage(int num) {
+    public void reset() {
+        myObjectives = new TaskObjectiveCollectionImpl(myObjectivesCommitted);
+    }
+
+    public void commit() {
+        myObjectivesCommitted = new TaskObjectiveCollectionImpl(myObjectives);
+        int checkedPercentage = myObjectives.getCheckedPercentage();
+        myTask.setMinPercentage(checkedPercentage);
+        myTask.setCompletionPercentage(checkedPercentage);
+    }
+
+    private int addPercentage(int num) {
+        int totalPercentage = myObjectives.getTotalPercentage();
         int sum = totalPercentage+num;
         if(sum<0)
             return 0;

@@ -1,7 +1,9 @@
 package net.sourceforge.ganttproject.task;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.sourceforge.ganttproject.GPLogger;
+import net.sourceforge.ganttproject.task.dependency.*;
+
+import java.util.*;
 
 public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
@@ -18,6 +20,12 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     public TaskObjectiveCollectionImpl(Task myTask) {
         myObjectives = new ArrayList<>();
         this.myTask = myTask;
+    }
+
+    public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
+        myObjectives = taskCol.getObjectivesList();
+        totalPercentage = taskCol.getTotalPercentage();
+        this.myTask = taskCol.getTask();
     }
 
     @Override
@@ -80,4 +88,14 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         totalPercentage = 0;
         myTask.setCompletionPercentage(0);
     }
+
+    public int getCheckedPercentage() {
+        int checkedPercentage = 0;
+        for(TaskObjective obj : myObjectives) {
+            if(obj.isChecked())
+                checkedPercentage+=obj.getPercentage();
+        }
+        return checkedPercentage;
+    }
+
 }

@@ -32,8 +32,6 @@ import java.util.List;
 public class ObjectivesPanel {
 
     private ObjectivesTableModel myModel;
-    //private final HumanResourceManager myHRManager;
-    //private final RoleManager myRoleManager;
     private final Task myTask;
     /*private final DefaultBooleanOption myCostIsCalculated = new DefaultBooleanOption("taskProperties.cost.calculated");
     private final DefaultDoubleOption myCostValue = new DefaultDoubleOption("taskProperties.cost.value") {
@@ -86,62 +84,15 @@ public class ObjectivesPanel {
                     }
                 };
         return CommonPanel.createTableAndActions(myTable, tableAndActions.getActionsComponent());
-        /*String layoutDef = "(ROW weight=1.0 (LEAF name=objectives weight=0.5))";
 
-        JXMultiSplitPane result = new JXMultiSplitPane();
-        result.setDividerSize(0);
-
-        MultiSplitLayout.Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
-        result.getMultiSplitLayout().setModel(modelRoot);
-        result.add(tablePanel, "objectives");
-        return result;*/
     }
-/*
-    private JComponent createCostPanel() {
-        myCostIsCalculated.setValue(myTask.getCost().isCalculated());
-        myCostIsCalculated.addChangeValueListener(new ChangeValueListener() {
-            @Override
-            public void changeValue(ChangeValueEvent event) {
-                myCostValue.setWritable(!myCostIsCalculated.isChecked());
-                myCostValue.setValue(myTask.getCost().getValue().doubleValue());
-            }
-        });
-        myCostValue.setValue(myTask.getCost().getValue().doubleValue());
-        myCostValue.setWritable(!myCostIsCalculated.isChecked());
-
-        OptionsPageBuilder builder = new OptionsPageBuilder();
-        OptionsPageBuilder.BooleanOptionRadioUi radioUi = OptionsPageBuilder.createBooleanOptionRadioUi(myCostIsCalculated);
-
-        JPanel optionsPanel = new JPanel();
-        optionsPanel.add(radioUi.getYesButton());
-        optionsPanel.add(new JLabel(myTask.getCost().getCalculatedValue().toPlainString()));
-        optionsPanel.add(radioUi.getNoButton());
-        optionsPanel.add(builder.createOptionComponent(myCostGroup, myCostValue));
-        OptionsPageBuilder.TWO_COLUMN_LAYOUT.layout(optionsPanel, 2);
-
-        final String yesLabelKey = builder.getI18N().getCanonicalOptionLabelKey(myCostIsCalculated) + ".yes";
-        radioUi.getYesButton().setText(GanttLanguage.getInstance().getText(yesLabelKey));
-        radioUi.getNoButton().setText(GanttLanguage.getInstance().getText(builder.getI18N().getCanonicalOptionLabelKey(myCostIsCalculated) + ".no"));
-        UIUtil.createTitle(optionsPanel, builder.getI18N().getOptionGroupLabel(myCostGroup));
-
-        JPanel result = new JPanel(new BorderLayout());
-        result.add(optionsPanel, BorderLayout.NORTH);
-        return result;
-    }
-
-
 
     public void commit() {
         if (myTable.isEditing()) {
             myTable.getCellEditor().stopCellEditing();
         }
         myModel.commit();
-        Task.Cost cost = myTask.getCost();
-        cost.setCalculated(myCostIsCalculated.getValue());
-        if (!cost.isCalculated()) {
-            cost.setValue(BigDecimal.valueOf(myCostValue.getValue()));
-        }
     }
 
- */
+
 }
