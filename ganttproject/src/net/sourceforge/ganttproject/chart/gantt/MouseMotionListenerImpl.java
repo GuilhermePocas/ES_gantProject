@@ -20,6 +20,7 @@ package net.sourceforge.ganttproject.chart.gantt;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 import java.util.Date;
 
 import com.google.common.base.Strings;
@@ -95,9 +96,10 @@ class MouseMotionListenerImpl extends MouseMotionListenerBase {
     else if(itemUnderPoint instanceof TaskRegularAreaChartItem && taskUnderPoint.getObjectivesCollection().size()!=0){
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
       TaskObjectiveCollection objCole = taskUnderPoint.getObjectivesCollection();
-      String textObjectives = "";
+      String textObjectives = "To do list: ".concat("\n");
       for(int i = 0; i < objCole.size(); i++) {
-        textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
+        if(!objCole.get(i).isChecked())
+          textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
       }
 
       myChartController.showTooltip(e.getX(), e.getY()
