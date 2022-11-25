@@ -62,7 +62,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return myObjectivesCommitted.size() + myObjectivesBuffer.size() + 1;
+        return myObjectivesBuffer.size() + 1;
     }
 
     @Override
@@ -211,10 +211,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
         myObjectivesBuffer.removeAll(selected);
         fireTableDataChanged();
         updateTask();
-
-        /*int checkedPercentage = myObjectives.getCheckedPercentage();
-        myTask.setMinPercentage(checkedPercentage);
-        myTask.setCompletionPercentage(checkedPercentage);*/
     }
 
     public void clear() {
@@ -225,7 +221,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
         myObjectivesCommitted.copy(myObjectivesBuffer);
         myObjectivesBuffer.clear();
         fireTableDataChanged();
-        throw new RuntimeException(myObjectivesBuffer.size() + "" + myObjectivesCommitted.size());
     }
 
     private void updateTask() {
