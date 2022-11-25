@@ -207,7 +207,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 selected.add(myObjectivesBuffer.get(row));
             }
         }
-
         myObjectivesBuffer.removeAll(selected);
         fireTableDataChanged();
         updateTask();
