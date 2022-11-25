@@ -1,8 +1,6 @@
 package net.sourceforge.ganttproject.task;
 
 public interface TaskObjective {
-
-
     String getName();
 
     void setName(String name);
@@ -16,6 +14,5 @@ public interface TaskObjective {
     boolean isChecked();
 
     void check(boolean value);
-
 
 }

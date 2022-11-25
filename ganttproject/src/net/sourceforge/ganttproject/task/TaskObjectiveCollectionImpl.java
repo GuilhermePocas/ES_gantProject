@@ -102,13 +102,10 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return MAX - getTotalPercentage();
     }
 
-    public void copy(TaskObjectiveCollection list) {
-        clear();
+    public void addAll(TaskObjectiveCollection list) {
         if(list != null) {
-            for(TaskObjective obj : list.getObjectivesList()) {
-                if(obj.getName() != null)
-                    myObjectives.add(obj);
-            }
+            myObjectives.addAll(list.getObjectivesList());
         }
     }
+
 }

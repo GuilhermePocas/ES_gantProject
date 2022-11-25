@@ -42,12 +42,15 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private boolean isChanged = false;
 
+    private int currentID;
+
 
 
     public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
         this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCol);
         this.myObjectivesCommitted = myObjectivesCol;
         myTask = myObjectivesCol.getTask();
+        currentID = 0;
     }
 
     @Override
@@ -161,9 +164,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private void createObjective(Object value, int col) {
 
-        int id = 0;
-        if (getMyObjectives() != null)
-            id = myObjectivesBuffer.size();
+        int id = currentID++;
         String name = "Objective " + (id+1);
         int percentage = 0;
         boolean isChecked = false;
@@ -217,7 +218,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     public void commit() {
-        myObjectivesCommitted.copy(myObjectivesBuffer);
+        myObjectivesCommitted.clear();
+        myObjectivesCommitted.addAll(myObjectivesBuffer);
         myObjectivesBuffer.clear();
         fireTableDataChanged();
     }
