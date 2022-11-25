@@ -31,20 +31,10 @@ import java.util.List;
 
 public class ObjectivesPanel {
 
+    private static final Integer [] PERCENTAGE = new Integer[]{0,10,20,30,40,50,60,70,80,90,100};
+
     private ObjectivesTableModel myModel;
     private final Task myTask;
-    /*private final DefaultBooleanOption myCostIsCalculated = new DefaultBooleanOption("taskProperties.cost.calculated");
-    private final DefaultDoubleOption myCostValue = new DefaultDoubleOption("taskProperties.cost.value") {
-
-        @Override
-        public void setValue(Double value) {
-            // TODO Auto-generated method stub
-            super.setValue(value);
-        }
-
-    };*/
-    //private final GPOptionGroup myCostGroup = new GPOptionGroup("task.cost", myCostIsCalculated, myCostValue);
-
     private JTable myTable;
 
     public ObjectivesPanel(Task task) {
@@ -59,6 +49,7 @@ public class ObjectivesPanel {
         myModel = new ObjectivesTableModel(myTask.getObjectivesCollection());
         myTable = new JTable(myModel);
         UIUtil.setupTableUI(getTable());
+        CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(2), PERCENTAGE);
         //CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(1), myHRManager.getResources().toArray());
         //CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(4), myRoleManager.getEnabledRoles());
 

@@ -141,7 +141,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 break;
             }
             case 2: {
-                int loadAsInt = Integer.parseInt(String.valueOf(value));
+                int loadAsInt = (Integer) value;
                 int leftOver = myObjectivesBuffer.getLeftOver();
                 updateTarget.setPercentage(Math.min(leftOver, loadAsInt));
                 break;
@@ -173,7 +173,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
                     name = (String) value;
                 break;
             case 2:
-                percentage = Integer.parseInt((String) value);
+                percentage = (Integer) value;
                 break;
             case 3:
                 isChecked = (boolean) value;
