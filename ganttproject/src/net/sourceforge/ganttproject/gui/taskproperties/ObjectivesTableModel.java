@@ -34,9 +34,9 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    private TaskObjectiveCollection myObjectivesCommitted;
+    private final TaskObjectiveCollection myObjectivesCommitted;
 
-    private TaskObjectiveCollection myObjectivesBuffer;
+    private final TaskObjectiveCollection myObjectivesBuffer;
 
     private final Task myTask;
 
