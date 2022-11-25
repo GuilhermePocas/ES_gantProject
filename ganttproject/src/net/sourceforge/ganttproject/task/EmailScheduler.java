@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -140,6 +141,8 @@ public class EmailScheduler {
     // the email scheduler is created before the assigned people are loaded
     // this lets the program load the assigned people before sending the email
     public void sendLateEmail() {
+        showPopupMessage("Task "+task.getName()+"'s email notification percentage was exceeded.\nA late email was sent to all its coordinators.");
+
         Timer lateMailTimer = new Timer();
         lateMailTimer.schedule(new TimerTask() {
             @Override
@@ -149,8 +152,14 @@ public class EmailScheduler {
                 sendEmail(newPercentage);                
             }
         }, 1000);   
+    }
 
-        JOptionPane.showMessageDialog(new JFrame(), 
-        "Task "+task.getName()+"'s email notification percentage was exceeded.\nA late email was sent to all its coordinators.");
+    private void showPopupMessage(final String message) {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(null, message);
+            }
+        });
     }
 }
