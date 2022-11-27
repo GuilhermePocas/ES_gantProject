@@ -12,8 +12,6 @@ public interface TaskObjectiveCollection {
 
     void add(TaskObjective obj);
 
-    Task getTask();
-
     int size();
 
     TaskObjective get(int index);

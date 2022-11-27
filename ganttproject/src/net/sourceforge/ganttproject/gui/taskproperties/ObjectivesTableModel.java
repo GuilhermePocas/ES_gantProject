@@ -46,11 +46,11 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
 
 
-    public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
-        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCol);
-        this.myObjectivesCommitted = myObjectivesCol;
-        myTask = myObjectivesCol.getTask();
-        currentID = 0;
+    public ObjectivesTableModel(Task task) {
+        this.myObjectivesCommitted = task.getObjectivesCollection();
+        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCommitted);
+        myTask = task;
+        currentID = myObjectivesCommitted.size();
     }
 
     @Override
@@ -125,9 +125,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 updateObjective(value, row, col);
             }
 
-            if(col == 3) {
-                updateTask();
-            }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
         }
@@ -164,8 +161,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private void createObjective(Object value, int col) {
 
-        int id = currentID++;
-        String name = "Objective " + (id+1);
+        String name = "Objective " + (currentID++ + 1);
         int percentage = 0;
         boolean isChecked = false;
         switch (col) {
@@ -188,7 +184,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
             isChecked = ((TaskObjective) value).isChecked();
         }
 
-        TaskObjective newObjective = new TaskObjectiveImpl(id, name , percentage, isChecked);
+        TaskObjective newObjective = new TaskObjectiveImpl(currentID, name , percentage, isChecked);
         myObjectivesBuffer.add(newObjective);
         fireTableRowsInserted(myObjectivesBuffer.size(), myObjectivesBuffer.size());
     }
@@ -210,7 +206,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
         myObjectivesBuffer.removeAll(selected);
         fireTableDataChanged();
-        updateTask();
+        //updateTask();
     }
 
     public void clear() {
@@ -221,7 +217,14 @@ public class ObjectivesTableModel extends AbstractTableModel {
         myObjectivesCommitted.clear();
         myObjectivesCommitted.addAll(myObjectivesBuffer);
         myObjectivesBuffer.clear();
+
+        for(int i=0; i<myObjectivesCommitted.size(); i++) {
+            TaskObjective obj = myObjectivesCommitted.get(i);
+            updateObjective(true, i, 3);
+        }
+
         fireTableDataChanged();
+        updateTask();
     }
 
     private void updateTask() {

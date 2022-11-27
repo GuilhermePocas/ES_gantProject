@@ -11,19 +11,15 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     private final List<TaskObjective> myObjectives;
 
-    private final Task myTask;
-
     private static int MAX = 100;
 
     public TaskObjectiveCollectionImpl(Task myTask) {
         myObjectives = new ArrayList<>();
-        this.myTask = myTask;
     }
 
     public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
         myObjectives = new ArrayList<>();
         myObjectives.addAll(taskCol.getObjectivesList());
-        this.myTask = taskCol.getTask();
     }
 
     @Override
@@ -42,11 +38,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
             objective.setPercentage(newPercentage);
             myObjectives.add(objective);
         }
-    }
-
-    @Override
-    public Task getTask() {
-        return myTask;
     }
 
     public int size() {
