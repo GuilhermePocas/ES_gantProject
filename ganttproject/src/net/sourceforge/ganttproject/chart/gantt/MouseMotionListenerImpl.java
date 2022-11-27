@@ -96,18 +96,22 @@ class MouseMotionListenerImpl extends MouseMotionListenerBase {
     else if(itemUnderPoint instanceof TaskRegularAreaChartItem && taskUnderPoint.getObjectivesCollection().size()!=0){
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
       TaskObjectiveCollection objCole = taskUnderPoint.getObjectivesCollection();
-      String textObjectives = "To do list: ".concat("\n");
+      String textObjectives = "";
       for(int i = 0; i < objCole.size(); i++) {
-        if(!objCole.get(i).isChecked())
-          textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
+        if (!objCole.get(i).isChecked()) {
+          String redObjectives = (objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
+          textObjectives = textObjectives.concat(String.format("<html><font color='%s'>%s<html>", "#B22222", redObjectives));
+        } else {
+          String greenObjectives = (objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
+          textObjectives = textObjectives.concat(String.format("<html><font color='%s'>%s<html>", "#008000", greenObjectives));
+        }
+
       }
 
-
-      myChartController.showTooltip(e.getX(), e.getY()
+        myChartController.showTooltip(e.getX(), e.getY()
               ,GanttLanguage.getInstance().formatText(
-                      "task.objectivesTooltip.pattern","<HTML><input type=\"text\" name=\"obj\" id=\"obj\" /></HTML>"));
+                      "task.objectivesTooltip.pattern",textObjectives.replace("\n","<br>")));
     }
-    //"<HTML> <BODY> <p id=\"obj\" style=\"color:red;\"> textObjectives.replace(\"\n\", \"<br>\"));</p> </BODY></HTML>"
     else {
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
     }
