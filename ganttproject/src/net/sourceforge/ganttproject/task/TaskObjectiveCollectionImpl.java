@@ -13,13 +13,13 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     private static int MAX = 100;
 
-    public TaskObjectiveCollectionImpl(Task myTask) {
+    public TaskObjectiveCollectionImpl() {
         myObjectives = new ArrayList<>();
     }
 
     public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
         myObjectives = new ArrayList<>();
-        myObjectives.addAll(taskCol.getObjectivesList());
+        this.addAll(taskCol);
     }
 
     @Override
@@ -95,8 +95,15 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     public void addAll(TaskObjectiveCollection list) {
         if(list != null) {
-            myObjectives.addAll(list.getObjectivesList());
+            for(TaskObjective obj: list.getObjectivesList()) {
+                int id = obj.getId();
+                String name = obj.getName();
+                int percentage = obj.getPercentage();
+                boolean check = obj.isChecked();
+                TaskObjective newObj = new TaskObjectiveImpl(id, name, percentage, check);
+
+                myObjectives.add(newObj);
+            }
         }
     }
-
 }

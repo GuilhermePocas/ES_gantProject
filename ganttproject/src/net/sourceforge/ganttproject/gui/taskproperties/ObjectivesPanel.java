@@ -84,5 +84,9 @@ public class ObjectivesPanel {
         myModel.commit();
     }
 
+    public void clear() {
+        myModel.clear();
+    }
+
 
 }
