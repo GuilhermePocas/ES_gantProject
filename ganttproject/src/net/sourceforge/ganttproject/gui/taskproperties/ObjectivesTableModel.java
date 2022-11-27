@@ -216,8 +216,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     public void commit() {
         remove0s();
-        myObjectivesCommitted.clear();
-        myObjectivesCommitted.addAll(myObjectivesBuffer);
+        myObjectivesCommitted.copy(myObjectivesBuffer);
         myObjectivesBuffer.clear();
 
         fireTableDataChanged();

@@ -32,6 +32,6 @@ public interface TaskObjectiveCollection {
 
     int getLeftOver();
 
-    void addAll(TaskObjectiveCollection list);
+    void copy(TaskObjectiveCollection list);
 
 }

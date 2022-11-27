@@ -19,7 +19,7 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
         myObjectives = new ArrayList<>();
-        this.addAll(taskCol);
+        this.copy(taskCol);
     }
 
     @Override
@@ -93,7 +93,8 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return MAX - getTotalPercentage();
     }
 
-    public void addAll(TaskObjectiveCollection list) {
+    public void copy(TaskObjectiveCollection list) {
+        this.clear();
         if(list != null) {
             for(TaskObjective obj: list.getObjectivesList()) {
                 int id = obj.getId();
