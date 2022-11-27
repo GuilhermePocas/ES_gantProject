@@ -102,10 +102,12 @@ class MouseMotionListenerImpl extends MouseMotionListenerBase {
           textObjectives = textObjectives.concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
       }
 
+
       myChartController.showTooltip(e.getX(), e.getY()
               ,GanttLanguage.getInstance().formatText(
-                      "task.objectivesTooltip.pattern", textObjectives.replace("\n", "<br>")));
+                      "task.objectivesTooltip.pattern","<HTML><input type=\"text\" name=\"obj\" id=\"obj\" /></HTML>"));
     }
+    //"<HTML> <BODY> <p id=\"obj\" style=\"color:red;\"> textObjectives.replace(\"\n\", \"<br>\"));</p> </BODY></HTML>"
     else {
       myChartComponent.setCursor(ChartComponentBase.HAND_CURSOR);
     }
