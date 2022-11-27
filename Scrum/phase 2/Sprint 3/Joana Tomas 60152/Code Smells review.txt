@@ -1,0 +1,3 @@
+1º Smell solution doesn't make much sense because they're both constructors - Guilherme Poças 60236
+2º This smell isn't suitable because the class isn't that large and mostly made of unimplemented methods - João Agostinho 57538
+3º This smell doesn't seem right as the method is not long enough to be a code smell - João Agostinho 57538
