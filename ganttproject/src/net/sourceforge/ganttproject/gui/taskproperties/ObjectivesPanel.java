@@ -46,12 +46,11 @@ public class ObjectivesPanel {
     }
 
     public JPanel getComponent() {
-        myModel = new ObjectivesTableModel(myTask.getObjectivesCollection());
+        myModel = new ObjectivesTableModel(myTask);
         myTable = new JTable(myModel);
         UIUtil.setupTableUI(getTable());
         CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(2), PERCENTAGE);
-        //CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(1), myHRManager.getResources().toArray());
-        //CommonPanel.setupComboBoxEditor(getTable().getColumnModel().getColumn(4), myRoleManager.getEnabledRoles());
+
 
         AbstractTableAndActionsComponent<TaskObjective> tableAndActions =
                 new AbstractTableAndActionsComponent<TaskObjective>(getTable()) {

@@ -1,6 +1,7 @@
 package net.sourceforge.ganttproject.gui.taskproperties;
 
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.sourceforge.ganttproject.task.*;
 
 
@@ -42,15 +43,11 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     private boolean isChanged = false;
 
-    private int currentID;
 
-
-
-    public ObjectivesTableModel(TaskObjectiveCollection myObjectivesCol) {
-        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCol);
-        this.myObjectivesCommitted = myObjectivesCol;
-        myTask = myObjectivesCol.getTask();
-        currentID = 0;
+    public ObjectivesTableModel(Task task) {
+        this.myObjectivesCommitted = task.getObjectivesCollection();
+        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCommitted);
+        myTask = task;
     }
 
     @Override
@@ -125,9 +122,6 @@ public class ObjectivesTableModel extends AbstractTableModel {
                 updateObjective(value, row, col);
             }
 
-            if(col == 3) {
-                updateTask();
-            }
         } else {
             throw new IllegalArgumentException("I can't set data in row=" + row);
         }
@@ -139,14 +133,16 @@ public class ObjectivesTableModel extends AbstractTableModel {
         switch (col) {
             case 3: {
                 updateTarget.check((Boolean) value);
-                if(updateTarget.isChecked())
-                    myTask.setMinPercentage(updateTarget.getPercentage());
+                //if(updateTarget.isChecked())
+                //    myTask.setMinPercentage(updateTarget.getPercentage());
                 break;
             }
             case 2: {
-                int loadAsInt = (Integer) value;
+                int percentage = 0;
+                if(value != null)
+                    percentage = (Integer) value;
                 int leftOver = myObjectivesBuffer.getLeftOver();
-                updateTarget.setPercentage(Math.min(leftOver, loadAsInt));
+                updateTarget.setPercentage(Math.min(leftOver, percentage));
                 break;
             }
             case 1: {
@@ -163,9 +159,10 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     private void createObjective(Object value, int col) {
-
-        int id = currentID++;
-        String name = "Objective " + (id+1);
+        int id = 0;
+        if (getMyObjectives() != null)
+            id = myObjectivesBuffer.size();
+        String name = "Objective " + (id + 1);
         int percentage = 0;
         boolean isChecked = false;
         switch (col) {
@@ -174,7 +171,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
                     name = (String) value;
                 break;
             case 2:
-                percentage = (Integer) value;
+                if(value != null)
+                    percentage = (Integer) value;
                 break;
             case 3:
                 isChecked = (boolean) value;
@@ -194,7 +192,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     public List<TaskObjective> getMyObjectives() {
-        return Collections.unmodifiableList(myObjectivesCommitted.getObjectivesList());
+        return Collections.unmodifiableList(myObjectivesBuffer.getObjectivesList());
     }
 
     public boolean isChanged() {
@@ -210,18 +208,14 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
         myObjectivesBuffer.removeAll(selected);
         fireTableDataChanged();
-        updateTask();
-    }
-
-    public void clear() {
-        myObjectivesBuffer.clear();
     }
 
     public void commit() {
-        myObjectivesCommitted.clear();
-        myObjectivesCommitted.addAll(myObjectivesBuffer);
-        myObjectivesBuffer.clear();
+        remove0s();
+        myObjectivesCommitted.copy(myObjectivesBuffer);
+
         fireTableDataChanged();
+        updateTask();
     }
 
     private void updateTask() {
@@ -230,4 +224,13 @@ public class ObjectivesTableModel extends AbstractTableModel {
         myTask.setCompletionPercentage(checkedPercentage);
     }
 
+    //removes all objectives with 0%
+    private void remove0s() {
+        for(int i=0; i<myObjectivesBuffer.size(); i++) {
+            TaskObjective obj = myObjectivesBuffer.get(i);
+            if(obj.getPercentage() == 0)
+                myObjectivesBuffer.remove(obj);
+
+        }
+    }
 }

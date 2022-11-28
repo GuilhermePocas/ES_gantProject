@@ -396,6 +396,7 @@ public class GanttTaskPropertiesBean extends JPanel {
   private void constructObjectivesPanel() {
       myObjectivesPanel = new ObjectivesPanel(selectedTasks[0]);
       objectivesPanel = myObjectivesPanel.getComponent();
+      //myObjectivesPanel.clear();
   }
 
   /** Construct the notes panel */

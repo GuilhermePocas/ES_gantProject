@@ -199,5 +199,4 @@ public interface Task extends MutableTask {
 
   EmailScheduler getEmailScheduler();
 
-  void addObjective(TaskObjective obj);
 }

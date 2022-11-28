@@ -12,8 +12,6 @@ public interface TaskObjectiveCollection {
 
     void add(TaskObjective obj);
 
-    Task getTask();
-
     int size();
 
     TaskObjective get(int index);
@@ -28,12 +26,10 @@ public interface TaskObjectiveCollection {
 
     boolean reachedTheMaximum();
 
-    void clear();
-
     int getCheckedPercentage();
 
     int getLeftOver();
 
-    void addAll(TaskObjectiveCollection list);
+    void copy(TaskObjectiveCollection list);
 
 }

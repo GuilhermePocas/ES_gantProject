@@ -157,7 +157,7 @@ public class TaskImpl implements Task {
     myManager = taskManager;
     myID = taskID;
 
-    myObjectives = new TaskObjectiveCollectionImpl(this);
+    myObjectives = new TaskObjectiveCollectionImpl();
     myAssignments = new ResourceAssignmentCollectionImpl(this, myManager.getConfig().getResourceManager());
     myDependencySlice = new TaskDependencySliceImpl(this, myManager.getDependencyCollection(), TaskDependencySlice.COMPLETE_SLICE_FXN);
     myDependencySliceAsDependant = new TaskDependencySliceAsDependant(this, myManager.getDependencyCollection());
@@ -1392,7 +1392,4 @@ public class TaskImpl implements Task {
     return myCost;
   }
 
-  public void addObjective(TaskObjective obj) {
-    myObjectives.add(obj);
-  }
 }

@@ -11,19 +11,15 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
 
     private final List<TaskObjective> myObjectives;
 
-    private final Task myTask;
-
     private static int MAX = 100;
 
-    public TaskObjectiveCollectionImpl(Task myTask) {
+    public TaskObjectiveCollectionImpl() {
         myObjectives = new ArrayList<>();
-        this.myTask = myTask;
     }
 
     public TaskObjectiveCollectionImpl(TaskObjectiveCollection taskCol) {
         myObjectives = new ArrayList<>();
-        myObjectives.addAll(taskCol.getObjectivesList());
-        this.myTask = taskCol.getTask();
+        this.copy(taskCol);
     }
 
     @Override
@@ -42,11 +38,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
             objective.setPercentage(newPercentage);
             myObjectives.add(objective);
         }
-    }
-
-    @Override
-    public Task getTask() {
-        return myTask;
     }
 
     public int size() {
@@ -77,10 +68,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return getTotalPercentage() >= MAX;
     }
 
-    public void clear() {
-        myObjectives.clear();
-    }
-
     public int getTotalPercentage() {
         int TotalPercentage = 0;
         for(TaskObjective obj : myObjectives) {
@@ -102,10 +89,18 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return MAX - getTotalPercentage();
     }
 
-    public void addAll(TaskObjectiveCollection list) {
+    public void copy(TaskObjectiveCollection list) {
+        myObjectives.clear();
         if(list != null) {
-            myObjectives.addAll(list.getObjectivesList());
+            for(TaskObjective obj: list.getObjectivesList()) {
+                int id = obj.getId();
+                String name = obj.getName();
+                int percentage = obj.getPercentage();
+                boolean check = obj.isChecked();
+                TaskObjective newObj = new TaskObjectiveImpl(id, name, percentage, check);
+
+                myObjectives.add(newObj);
+            }
         }
     }
-
 }
