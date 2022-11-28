@@ -1392,7 +1392,4 @@ public class TaskImpl implements Task {
     return myCost;
   }
 
-  public void addObjective(TaskObjective obj) {
-    myObjectives.add(obj);
-  }
 }

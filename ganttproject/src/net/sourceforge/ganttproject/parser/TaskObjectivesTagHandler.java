@@ -3,6 +3,7 @@ package net.sourceforge.ganttproject.parser;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.sourceforge.ganttproject.CustomPropertyManager;
 import net.sourceforge.ganttproject.task.Task;
+import net.sourceforge.ganttproject.task.TaskObjectiveCollection;
 import net.sourceforge.ganttproject.task.TaskObjectiveImpl;
 import org.xml.sax.Attributes;
 
@@ -27,7 +28,8 @@ public class TaskObjectivesTagHandler extends AbstractTagHandler implements Pars
         String cheked = atts.getValue("cheked");
 
         Task task = myContext.popTask();
-        task.addObjective(new TaskObjectiveImpl(Integer.parseInt(id), name, Integer.parseInt(percentage), Boolean.parseBoolean(cheked)));
+        TaskObjectiveCollection col = task.getObjectivesCollection();
+        col.add(new TaskObjectiveImpl(Integer.parseInt(id), name, Integer.parseInt(percentage), Boolean.parseBoolean(cheked)));
         myContext.pushTask(task);
     }
 
