@@ -41,11 +41,6 @@ public class TaskObjectiveCollectionImplTest {
         assert(col.reachedTheMaximum() == true);
     }
 
-    @Test
-    public void clear() {
-        col.clear();
-        assert(col.size() == 0);
-    }
 
     @Test
     public void getTotalPercentage() {

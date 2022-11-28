@@ -68,10 +68,6 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
         return getTotalPercentage() >= MAX;
     }
 
-    public void clear() {
-        myObjectives.clear();
-    }
-
     public int getTotalPercentage() {
         int TotalPercentage = 0;
         for(TaskObjective obj : myObjectives) {
@@ -94,7 +90,7 @@ public class TaskObjectiveCollectionImpl implements TaskObjectiveCollection{
     }
 
     public void copy(TaskObjectiveCollection list) {
-        this.clear();
+        myObjectives.clear();
         if(list != null) {
             for(TaskObjective obj: list.getObjectivesList()) {
                 int id = obj.getId();
