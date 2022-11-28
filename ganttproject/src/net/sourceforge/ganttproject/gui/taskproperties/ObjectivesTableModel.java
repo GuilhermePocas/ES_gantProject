@@ -35,7 +35,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
-    private final TaskObjectiveCollection myObjectivesCommited;
+    private final TaskObjectiveCollection myObjectivesCommitted;
 
     private final TaskObjectiveCollection myObjectivesBuffer;
 
@@ -45,8 +45,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
 
     public ObjectivesTableModel(Task task) {
-        this.myObjectivesCommited = task.getObjectivesCollection();
-        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCommited);
+        this.myObjectivesCommitted = task.getObjectivesCollection();
+        this.myObjectivesBuffer = new TaskObjectiveCollectionImpl(myObjectivesCommitted);
         myTask = task;
     }
 
@@ -212,14 +212,14 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     public void commit() {
         remove0s();
-        myObjectivesCommited.copy(myObjectivesBuffer);
+        myObjectivesCommitted.copy(myObjectivesBuffer);
 
         fireTableDataChanged();
         updateTask();
     }
 
     private void updateTask() {
-        int checkedPercentage = myObjectivesCommited.getCheckedPercentage();
+        int checkedPercentage = myObjectivesCommitted.getCheckedPercentage();
         myTask.setMinPercentage(checkedPercentage);
         myTask.setCompletionPercentage(checkedPercentage);
     }
