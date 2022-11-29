@@ -15,8 +15,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
 
     static enum Column {
-        ID("id", String.class), NAME("objectivename", String.class),
-        PERCENTAGE("percentage", String.class), CHECKED("checked", Boolean.class);
+        ID("ID", String.class), NAME("Objective Name", String.class),
+        PERCENTAGE("Percentage", String.class), CHECKED("Checked", Boolean.class);
 
         private final String myName;
         private final Class<?> myClass;
