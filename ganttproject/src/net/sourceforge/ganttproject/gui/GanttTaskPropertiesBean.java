@@ -451,7 +451,7 @@ public class GanttTaskPropertiesBean extends JPanel {
         myCustomColumnPanel.getComponent());
 
     constructObjectivesPanel();
-    tabbedPane.addTab("Objectives", new ImageIcon(getClass().getResource("/icons/res_16.gif")),
+    tabbedPane.addTab("Objectives", new ImageIcon(getClass().getResource("/icons/objectives.png")),
             objectivesPanel);
 
     tabbedPane.addFocusListener(new FocusAdapter() {
