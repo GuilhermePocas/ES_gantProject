@@ -199,4 +199,6 @@ public interface Task extends MutableTask {
 
   EmailScheduler getEmailScheduler();
 
+  void updateObjectivePercentage(int oldObjPercentage);
+
 }

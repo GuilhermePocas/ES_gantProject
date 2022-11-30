@@ -81,6 +81,8 @@ public class TaskImpl implements Task {
 
   private int minPercentage = 0;
 
+  private int setPercentage = 0;
+
   private String myWebLink = "";
 
   private boolean emailNotificationActivated = false;
@@ -849,6 +851,7 @@ public class TaskImpl implements Task {
           myCompletionPercentageChange.myEventSender = myProgressEventSender;
         }
         myCompletionPercentageChange.setValue(new Integer(percentage));
+        //myCompletionPercentage += percentage;
       }
     }
 
@@ -1225,13 +1228,23 @@ public class TaskImpl implements Task {
   public void setCompletionPercentage(int percentage) {
     if(percentage >= minPercentage) {
       if (percentage != myCompletionPercentage) {
+        System.out.println(percentage);
+
         myCompletionPercentage = percentage;
+
         EventSender progressEventSender = new ProgressEventSender();
         progressEventSender.enable();
         progressEventSender.fireEvent();
       }
     }
   }
+
+  public void updateObjectivePercentage(int oldObjPercentage) {
+    int setPercentage = myCompletionPercentage - oldObjPercentage;
+    setPercentage = Math.min(100-myObjectives.getCheckedPercentage(), setPercentage);
+    setCompletionPercentage(setPercentage+myObjectives.getCheckedPercentage());
+  }
+
 
   @Override
   public void setShape(ShapePaint shape) {
