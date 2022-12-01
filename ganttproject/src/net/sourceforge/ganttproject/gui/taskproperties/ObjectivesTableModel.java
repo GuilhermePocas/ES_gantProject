@@ -224,7 +224,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     private void updateTask() {
         int checkedPercentage = myObjectivesCommitted.getCheckedPercentage();
         myTask.setMinPercentage(checkedPercentage);
-        myTask.updateObjectivePercentage(checkedPercentage);
+        myTask.setCompletionPercentage(checkedPercentage);
     }
 
     //removes all objectives with 0%
