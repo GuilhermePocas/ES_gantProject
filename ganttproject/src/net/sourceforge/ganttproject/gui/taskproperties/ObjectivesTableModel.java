@@ -133,16 +133,15 @@ public class ObjectivesTableModel extends AbstractTableModel {
         switch (col) {
             case 3: {
                 updateTarget.check((Boolean) value);
-                //if(updateTarget.isChecked())
-                //    myTask.setMinPercentage(updateTarget.getPercentage());
                 break;
             }
             case 2: {
                 int percentage = 0;
                 if(value != null)
                     percentage = (Integer) value;
-                int leftOver = myObjectivesBuffer.getLeftOver();
-                updateTarget.setPercentage(Math.min(leftOver, percentage));
+                int newLeftOver = myObjectivesBuffer.getLeftOver() + updateTarget.getPercentage();
+                updateTarget.setPercentage(Math.min(newLeftOver, percentage));
+
                 break;
             }
             case 1: {
