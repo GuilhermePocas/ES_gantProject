@@ -25,9 +25,9 @@ public class ObjectivesTableModelTest {
         taskManager = TestSetupHelper.newTaskManagerBuilder().build();
         task = taskManager.createTask();
         objTable = new ObjectivesTableModel(task);
-        objTable.setValueAt(10, 1, 2);
-        objTable.setValueAt(20, 2, 2);
-        objTable.setValueAt(30, 3, 2);
+        objTable.setValueAt(10, 0, 2);
+        objTable.setValueAt(20, 1, 2);
+        objTable.setValueAt(30, 2, 2);
     }
 
     @Test
@@ -60,6 +60,8 @@ public class ObjectivesTableModelTest {
         assert(objTable.isCellEditable(1, 1));
         assert(objTable.isCellEditable(1, 2));
         assert(objTable.isCellEditable(1, 3));
+
+        //when checked can only edit check
         objTable.setValueAt(true, 1, 3);
         assert(!objTable.isCellEditable(1,0));
         assert(!objTable.isCellEditable(1,1));
@@ -77,16 +79,21 @@ public class ObjectivesTableModelTest {
 
     @Test
     public void commit() {
+        objTable.setValueAt(true, 0, 3);
+        objTable.setValueAt(true, 1, 3);
+
         List<TaskObjective> listUncommited = task.getObjectivesCollection().getObjectivesList();
         assert(listUncommited.isEmpty());
+        assert(task.getCompletionPercentage() == 0);
+
         objTable.commit();
 
         List<TaskObjective> listCommited = task.getObjectivesCollection().getObjectivesList();
         List<TaskObjective> objList = objTable.getMyObjectives();
-        assertEquals(objList.get(0).getId(), listCommited.get(0).getId());
-        assertEquals(objList.get(1).getId(), listCommited.get(1).getId());
-        assertEquals(objList.get(2).getId(), listCommited.get(2).getId());
-
+        assert(objList.get(0).getId() == listCommited.get(0).getId());
+        assert(objList.get(1).getId() == listCommited.get(1).getId());
+        assert(objList.get(2).getId() == listCommited.get(2).getId());
+        assert(task.getCompletionPercentage() == 30);
 
     }
 }
