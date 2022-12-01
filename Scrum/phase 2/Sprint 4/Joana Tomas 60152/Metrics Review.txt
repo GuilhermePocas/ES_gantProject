@@ -1,0 +1,1 @@
+The identification of potential trouble spots is lacking where it exists and there is no connection between them and past code smells, assuming there is any. Although they could use a graph or two, the explanations are very good: simple and understandable. - Samuel Pires 60718
