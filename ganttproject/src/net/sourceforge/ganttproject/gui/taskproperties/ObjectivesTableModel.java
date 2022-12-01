@@ -15,8 +15,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
 
     static enum Column {
-        ID("id", String.class), NAME("objectivename", String.class),
-        PERCENTAGE("percentage", String.class), CHECKED("checked", Boolean.class);
+        ID("ID", String.class), NAME("Objective Name", String.class),
+        PERCENTAGE("Percentage", String.class), CHECKED("Checked", Boolean.class);
 
         private final String myName;
         private final Class<?> myClass;
@@ -212,16 +212,19 @@ public class ObjectivesTableModel extends AbstractTableModel {
 
     public void commit() {
         remove0s();
+        int oldPercentage = myObjectivesCommitted.getCheckedPercentage();
+
         myObjectivesCommitted.copy(myObjectivesBuffer);
 
         fireTableDataChanged();
-        updateTask();
+        myTask.setMinPercentage(myObjectivesCommitted.getCheckedPercentage());
+        myTask.updateObjectivePercentage(oldPercentage);
     }
 
     private void updateTask() {
         int checkedPercentage = myObjectivesCommitted.getCheckedPercentage();
         myTask.setMinPercentage(checkedPercentage);
-        myTask.setCompletionPercentage(checkedPercentage);
+        myTask.updateObjectivePercentage(checkedPercentage);
     }
 
     //removes all objectives with 0%
