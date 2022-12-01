@@ -35,6 +35,8 @@ public class ObjectivesTableModel extends AbstractTableModel {
         }
     }
 
+    private static int currentID = 0;
+
     private final TaskObjectiveCollection myObjectivesCommitted;
 
     private final TaskObjectiveCollection myObjectivesBuffer;
@@ -158,10 +160,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
     }
 
     private void createObjective(Object value, int col) {
-        int id = 0;
-        if (getMyObjectives() != null)
-            id = myObjectivesBuffer.size();
-        String name = "Objective " + (id + 1);
+        String name = "Objective " + (myObjectivesBuffer.size() + 1);
         int percentage = 0;
         boolean isChecked = false;
         switch (col) {
@@ -185,7 +184,7 @@ public class ObjectivesTableModel extends AbstractTableModel {
             isChecked = ((TaskObjective) value).isChecked();
         }
 
-        TaskObjective newObjective = new TaskObjectiveImpl(id, name , percentage, isChecked);
+        TaskObjective newObjective = new TaskObjectiveImpl(currentID++, name , percentage, isChecked);
         myObjectivesBuffer.add(newObjective);
         fireTableRowsInserted(myObjectivesBuffer.size(), myObjectivesBuffer.size());
     }
