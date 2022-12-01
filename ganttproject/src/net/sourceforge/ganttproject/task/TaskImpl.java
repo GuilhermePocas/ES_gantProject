@@ -1239,7 +1239,7 @@ public class TaskImpl implements Task {
   public void updateObjectivePercentage(int oldObjPercentage) {
     int setPercentage = myCompletionPercentage - oldObjPercentage + myObjectives.getCheckedPercentage();
     setPercentage = Math.min(100, setPercentage);
-    setCompletionPercentage(setPercentage);
+    setCompletionPercentage(Math.min(setPercentage, myObjectives.getLeftOver()+myObjectives.getCheckedPercentage()));
   }
 
 
