@@ -99,10 +99,10 @@ class MouseMotionListenerImpl extends MouseMotionListenerBase {
       String textObjectives = "";
       for(int i = 0; i < objCole.size(); i++) {
         if (!objCole.get(i).isChecked()) {
-          String redObjectives = (objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
+          String redObjectives = Integer.toString(objCole.get(i).getId()).concat(" - ").concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
           textObjectives = textObjectives.concat(String.format("<html><font color='%s'>%s<html>", "#B22222", redObjectives));
         } else {
-          String greenObjectives = (objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
+          String greenObjectives = Integer.toString(objCole.get(i).getId()).concat(" - ").concat(objCole.get(i).getName()).concat(" - ").concat(Integer.toString(objCole.get(i).getPercentage())).concat("%").concat("\n");
           textObjectives = textObjectives.concat(String.format("<html><font color='%s'>%s<html>", "#008000", greenObjectives));
         }
 
